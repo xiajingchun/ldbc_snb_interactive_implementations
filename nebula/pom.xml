@@ -17,6 +17,12 @@
             <artifactId>common</artifactId>
             <version>0.3.5-SNAPSHOT</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.vesoft/client -->
+        <dependency>
+            <groupId>com.vesoft</groupId>
+            <artifactId>client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -33,6 +39,20 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <!-- Additional configuration. -->
+                        </configuration>
+
                     </execution>
                 </executions>
             </plugin>
