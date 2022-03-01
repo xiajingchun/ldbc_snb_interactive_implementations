@@ -48,7 +48,10 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
     public Session getSession() {
         if (session.get() == null) {
             try {
-                session.set(pool.getSession(user, password, false));
+                Session newSession = pool.getSession(user, password, false);
+                // Currently we hard code to use sf300
+                newSession.execute("USE sf300");
+                session.set(newSession);
             } catch (Exception e) {
                 e.printStackTrace();
             }

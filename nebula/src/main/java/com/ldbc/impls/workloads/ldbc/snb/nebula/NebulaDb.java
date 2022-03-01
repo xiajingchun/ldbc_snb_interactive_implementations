@@ -67,7 +67,12 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                 // TODO:
             }
 
-            long friendId = record.get(0).asLong();
+            long friendId = 0;
+            if (record.get(0).isString()) {
+                String friendIdStr = record.get(0).asString();
+                friendId = Long.parseLong(friendIdStr.substring(7));
+            }
+
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = (int) record.get(2).asLong();
             long friendBirthday = 0;

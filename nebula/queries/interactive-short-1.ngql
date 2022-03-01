@@ -6,6 +6,6 @@ RETURN
   n.Person.birthday AS birthday,
   n.Person.locationIP AS locationIP,
   n.Person.browserUsed AS browserUsed,
-  p.Place.id AS cityId,
+  id(p.Place) AS cityId,
   n.Person.gender AS gender,
   n.Person.creationDate AS creationDate
