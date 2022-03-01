@@ -423,4 +423,147 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     creationDate);
         }
     }
+
+    public static class ShortQuery2PersonPosts extends NebulaListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getShortQuery2PersonPosts(operation);
+        }
+
+        @Override
+        public LdbcShortQuery2PersonPostsResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
+            // message-
+            long messageId = Long.parseLong(record.get(5).asString().substring(5));
+            String messageContent = record.get(1).asString();
+            long messageCreationDate = 0;
+            // TODO: long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long originalPostId = record.get(3).asLong();
+            long originalPostAuthorId = record.get(4).asLong();
+            String originalPostAuthorFirstName = record.get(5).asString();
+            String originalPostAuthorLastName = record.get(6).asString();
+            return new LdbcShortQuery2PersonPostsResult(
+                    messageId,
+                    messageContent,
+                    messageCreationDate,
+                    originalPostId,
+                    originalPostAuthorId,
+                    originalPostAuthorFirstName,
+                    originalPostAuthorLastName);
+        }
+    }
+
+    public static class ShortQuery3PersonFriends extends NebulaListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getShortQuery3PersonFriends(operation);
+        }
+
+        @Override
+        public LdbcShortQuery3PersonFriendsResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException  {
+            // person-
+            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            String firstName = record.get(1).asString();
+            String lastName = record.get(2).asString();
+            long friendshipCreationDate = 0;
+            // TODO: long friendshipCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            return new LdbcShortQuery3PersonFriendsResult(
+                    personId,
+                    firstName,
+                    lastName,
+                    friendshipCreationDate);
+        }
+    }
+
+    public static class ShortQuery4MessageContent extends NebulaSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getShortQuery4MessageContent(operation);
+        }
+
+        @Override
+        public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
+            // Pay attention, the spec's and the implementation's parameter orders are different.
+            long messageCreationDate = 0;
+            // TODO: long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(0).asLong());
+            String messageContent = record.get(1).asString();
+            return new LdbcShortQuery4MessageContentResult(
+                    messageContent,
+                    messageCreationDate);
+        }
+    }
+
+    public static class ShortQuery5MessageCreator extends NebulaSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getShortQuery5MessageCreator(operation);
+        }
+
+        @Override
+        public LdbcShortQuery5MessageCreatorResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
+            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            String firstName = record.get(1).asString();
+            String lastName = record.get(2).asString();
+            return new LdbcShortQuery5MessageCreatorResult(
+                    personId,
+                    firstName,
+                    lastName);
+        }
+    }
+
+    public static class ShortQuery6MessageForum extends NebulaSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getShortQuery6MessageForum(operation);
+        }
+
+        @Override
+        public LdbcShortQuery6MessageForumResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
+            // forum-
+            long forumId = Long.parseLong(record.get(0).asString().substring(6));
+            String forumTitle = record.get(1).asString();
+            long moderatorId = record.get(2).asLong();
+            String moderatorFirstName = record.get(3).asString();
+            String moderatorLastName = record.get(4).asString();
+            return new LdbcShortQuery6MessageForumResult(
+                    forumId,
+                    forumTitle,
+                    moderatorId,
+                    moderatorFirstName,
+                    moderatorLastName);
+        }
+    }
+
+    public static class ShortQuery7MessageReplies extends NebulaListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getShortQuery7MessageReplies(operation);
+        }
+
+        @Override
+        public LdbcShortQuery7MessageRepliesResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
+            // comment-
+            long commentId = Long.parseLong(record.get(0).asString().substring(8));
+            String commentContent = record.get(1).asString();
+            long commentCreationDate = 0;
+            // TODO: long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long replyAuthorId = record.get(3).asLong();
+            String replyAuthorFirstName = record.get(4).asString();
+            String replyAuthorLastName = record.get(5).asString();
+            boolean replyAuthorKnowsOriginalMessageAuthor = record.get(6).asBoolean();
+            return new LdbcShortQuery7MessageRepliesResult(
+                    commentId,
+                    commentContent,
+                    commentCreationDate,
+                    replyAuthorId,
+                    replyAuthorFirstName,
+                    replyAuthorLastName,
+                    replyAuthorKnowsOriginalMessageAuthor);
+        }
+    }
 }
