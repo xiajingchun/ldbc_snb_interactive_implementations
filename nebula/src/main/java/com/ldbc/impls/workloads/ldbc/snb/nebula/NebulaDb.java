@@ -70,6 +70,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long friendId = 0;
             if (record.get(0).isString()) {
                 String friendIdStr = record.get(0).asString();
+                // prefix: person-
                 friendId = Long.parseLong(friendIdStr.substring(7));
             }
 
@@ -117,7 +118,9 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             // TODO: long birthday = NebulaConverter.convertLongDateToEpoch(record.get(2).asLong());
             String locationIP = record.get(3).asString();
             String browserUsed = record.get(4).asString();
-            long cityId = record.get(5).asLong();
+            // prefix: city-
+            long cityId = Long.parseLong(record.get(5).asString().substring(5));
+
             String gender = record.get(6).asString();
             long creationDate = 0;
             // TODO: long creationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(7).asLong());
