@@ -21,7 +21,7 @@ public class NebulaInteractiveTest  extends InteractiveTest {
         properties.put("endpoint", "192.168.15.3:9669,192.168.15.5:9669,192.168.15.6:9669");
         properties.put("user", "root");
         properties.put("password", "nebula");
-        properties.put("spaceName", "sf300");
+        properties.put("spaceName", "sf300_033");
         properties.put("queryDir", "queries");
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "true");

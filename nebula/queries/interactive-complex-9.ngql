@@ -9,6 +9,6 @@ MATCH (n:Person)-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(message:`Comment
       WHEN true THEN coalesce(message.`Comment`.imageFile,message.`Comment`.content)
       ELSE coalesce(message.Post.imageFile,message.Post.content)
     END AS messageContent,
-    message.`Comment`.creationDate AS messageCreationDate
+    toString(message.`Comment`.creationDate) AS messageCreationDate
     ORDER BY messageCreationDate DESC, messageId ASC
     LIMIT 20

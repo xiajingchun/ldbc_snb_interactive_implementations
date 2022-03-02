@@ -4,7 +4,7 @@
   RETURN
     id(c) AS commentId,
     c.`Comment`.content AS commentContent,
-    c.`Comment`.creationDate AS commentCreationDate,
+    toString(c.`Comment`.creationDate) AS commentCreationDate,
     id(p) AS replyAuthorId,
     p.Person.firstName AS replyAuthorFirstName,
     p.Person.lastName AS replyAuthorLastName,

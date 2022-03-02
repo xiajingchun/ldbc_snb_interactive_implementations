@@ -1,7 +1,7 @@
 MATCH (m:`Comment`)
   WHERE id(m) == $commentId
   RETURN
-    m.`Comment`.creationDate as messageCreationDate,
+    toString(m.`Comment`.creationDate) as messageCreationDate,
     CASE exists(m.`Comment`.content)
       WHEN true THEN coalesce(m.`Comment`.imageFile,m.`Comment`.content)
       ELSE coalesce(m.Post.imageFile,m.Post.content)

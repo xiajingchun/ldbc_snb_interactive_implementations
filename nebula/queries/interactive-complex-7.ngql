@@ -11,7 +11,7 @@ MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:P
     id(liker) AS personId,
     liker.Person.firstName AS personFirstName,
     liker.Person.lastName AS personLastName,
-    latestLike.likeTime AS likeCreationDate,
+    toString(latestLike.likeTime) AS likeCreationDate,
     id(latestLike.msg) AS messageId,
     CASE exists(latestLike.msg.content)
       WHEN true THEN latestLike.msg.content

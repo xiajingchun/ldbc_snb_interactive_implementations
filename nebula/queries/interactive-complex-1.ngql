@@ -32,7 +32,7 @@ RETURN
   friend.Person.lastName AS friendLastName,
   distance AS distanceFromPerson,
   friend.Person.birthday AS friendBirthday,
-  friend.Person.creationDate AS friendCreationDate,
+  toString(friend.Person.creationDate) AS friendCreationDate,
   friend.Person.gender AS friendGender,
   friend.Person.browserUsed AS friendBrowserUsed,
   friend.Person.locationIP AS friendLocationIp,

@@ -4,5 +4,5 @@ MATCH (n:Person)-[r:KNOWS]-(friend)
     id(friend) AS personId,
     friend.Person.firstName AS firstName,
     friend.Person.lastName AS lastName,
-    r.creationDate AS friendshipCreationDate
-    ORDER BY friendshipCreationDate DESC, personId ASC
+    toString(r.creationDate) AS friendshipCreationDate
+    ORDER BY friendshipCreationDatsf300_033e DESC, personId ASC
