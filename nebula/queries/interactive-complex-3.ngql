@@ -1,27 +1,27 @@
-MATCH (countryX:Place)
-  WHERE id(countryX) == $countryXId
-MATCH (countryY:Place)
-  WHERE id(countryY) == $countryYId
+MATCH (countryX:Place{name:$countryXName})
+MATCH (countryY:Place{name:$countryYName})
 MATCH (person:Person)
   WHERE id(person) == $personId
-  WITH person, countryX, countryY
-  LIMIT 1
+WITH person, id(countryX) AS countryXId, id(countryY) AS countryYId
+LIMIT 1
 MATCH (city:Place)-[:IS_PART_OF]->(country:Place)
-  WHERE id(country) IN ["place-0", "place-95"]
-  WITH person, countryX, countryY, collect(city) AS cities
+WITH person,countryXId, countryYId, city, country
+WHERE id(country) IN [countryXId, countryYId]
+WITH person, countryXId, countryYId, collect(city) AS cities
 MATCH (person)-[:KNOWS*1..2]-(friend)-[:IS_LOCATED_IN]->(city)
   WHERE person<>friend AND NOT city IN cities
-  WITH DISTINCT friend, countryX, countryY
-MATCH (friend)<-[:HAS_CREATOR]-(message),
-  (message)-[:IS_LOCATED_IN]->(country)
-  WHERE $endDate > message.Message.creationDate >= $startDate AND
-  country IN [countryX, countryY]
-  WITH friend,
-  CASE WHEN country==countryX THEN 1 ELSE 0 END AS messageX,
-  CASE WHEN country==countryY THEN 1 ELSE 0 END AS messageY
+WITH DISTINCT friend, countryXId, countryYId
+MATCH (friend)<-[:HAS_CREATOR]-(message)-[:IS_LOCATED_IN]->(country)
+  WHERE datetime($endDate) > message.`Comment`.creationDate >= datetime($startDate)
+WITH friend, id(country) AS countryId, countryXId, countryYId
+  WHERE countryId IN [countryXId, countryYId]
+WITH friend,
+  CASE WHEN countryId==countryYId THEN 1 ELSE 0 END AS messageX,
+  CASE WHEN countryId==countryYId THEN 1 ELSE 0 END AS messageY
   WITH friend, sum(messageX) AS xCount, sum(messageY) AS yCount
   WHERE xCount>0 AND yCount>0
-  RETURN friend.Person.id AS friendId,
+  RETURN
+    id(friend) AS friendId,
     friend.Person.firstName AS friendFirstName,
     friend.Person.lastName AS friendLastName,
     xCount,

@@ -175,8 +175,8 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery5Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
-            String forumTitle = record.get(0).asString();
-            int postCount = (int) record.get(1).asLong();
+            String forumTitle = record.get(1).asString();
+            int postCount = (int) record.get(2).asLong();
             return new LdbcQuery5Result(forumTitle, postCount);
         }
     }

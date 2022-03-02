@@ -7,6 +7,9 @@ import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.converter.NebulaConverter;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class NebulaQueryStore extends QueryStore {
     public static final String COMMENT_ID = "commentId";
     public static final String COMMENT_ID_PREFIX = "comment-";
@@ -36,23 +39,32 @@ public class NebulaQueryStore extends QueryStore {
                 .build());
     }
 
+    protected Date addDays(Date startDate, int days){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.add(Calendar.DATE, days);
+        return cal.getTime();
+    }
+
     @Override
     public String getQuery3(LdbcQuery3 operation) {
+        Date endDate = addDays(operation.startDate(), operation.durationDays());
         return prepare(QueryType.InteractiveComplexQuery3, new ImmutableMap.Builder<String, String>()
                 .put("personId", getConverter().convertString(PERSON_ID_PREFIX + getConverter().convertId(operation.personId())))
                 .put("countryXName", getConverter().convertString(operation.countryXName()))
                 .put("countryYName", getConverter().convertString(operation.countryYName()))
                 .put("startDate", getConverter().convertDateTime(operation.startDate()))  // TODO:
-                .put("durationDays", getConverter().convertInteger(operation.durationDays()))  // TODO:
+                .put("endDate", getConverter().convertDateTime(endDate))  // TODO:
                 .build());
     }
 
     @Override
     public String getQuery4(LdbcQuery4 operation) {
+        Date endDate = addDays(operation.startDate(), operation.durationDays());
         return prepare(QueryType.InteractiveComplexQuery4, new ImmutableMap.Builder<String, String>()
                 .put("personId", getConverter().convertString(PERSON_ID_PREFIX + getConverter().convertId(operation.personId())))
                 .put("startDate", getConverter().convertDateTime(operation.startDate()))  // TODO:
-                .put("durationDays", getConverter().convertInteger(operation.durationDays()))  // TODO:
+                .put("endDate", getConverter().convertDateTime(endDate))  // TODO:
                 .build());
     }
 
