@@ -13,15 +13,6 @@ public abstract class NebulaUpdateOperationHandler <TOperation extends Operation
     @Override
     public void executeOperation(TOperation operation, NebulaDbConnectionState state, ResultReporter resultReporter) throws DbException {
         Session session = state.getSession();
-//        if (operation instanceof LdbcUpdate1AddPerson) {
-//            // TODO:
-//        } else if (operation instanceof LdbcUpdate4AddForum) {
-//            // TODO:
-//        } else if (operation instanceof LdbcUpdate6AddPost) {
-//            // TODO:
-//        } else if (operation instanceof LdbcUpdate8AddFriendship) {
-//            // TODO:
-//        } else {
             try {
                 final String queryString = getQueryString(state, operation);
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
