@@ -40,4 +40,16 @@ public class NebulaConverter extends Converter {
         return "datetime('" + sdf.format(date) + "')";
     }
 
+    @Override
+    public String convertDate(long timestamp) {
+        return convertDate(new Date(timestamp));
+    }
+
+    @Override
+    public String convertDate(Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return "date('" + sdf.format(date) + "')";
+    }
+
 }
