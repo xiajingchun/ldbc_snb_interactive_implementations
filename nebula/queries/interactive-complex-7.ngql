@@ -1,0 +1,23 @@
+MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:Person)
+  WHERE id(person) == $personId
+  WITH liker, message, like.creationDate AS likeTime, person, id(message) AS messageId
+  ORDER BY likeTime DESC, messageId ASC
+  WITH
+  liker,
+  head(collect({msg:message, likeTime:likeTime})) AS latestLike,
+  person
+  OPTIONAL MATCH p = (liker)-[:KNOWS]-(person)
+  RETURN
+    id(liker) AS personId,
+    liker.Person.firstName AS personFirstName,
+    liker.Person.lastName AS personLastName,
+    latestLike.likeTime AS likeCreationDate,
+    id(latestLike.msg) AS messageId,
+    CASE exists(latestLike.msg.content)
+      WHEN true THEN latestLike.msg.content
+      ELSE latestLike.msg.imageFile
+    END AS messageContent,
+    latestLike.msg.creationDate AS messageCreationDate,
+    p IS NULL AS isNew
+    ORDER BY likeCreationDate DESC, personId ASC
+    LIMIT 20

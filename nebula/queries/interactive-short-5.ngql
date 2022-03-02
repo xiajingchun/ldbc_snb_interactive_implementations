@@ -1,0 +1,6 @@
+MATCH (m:`Comment`)-[:HAS_CREATOR]->(p:Person)
+  WHERE id(m) == $commentId
+  RETURN
+    id(p) AS personId,
+    p.Person.firstName AS firstName,
+    p.Person.lastName AS lastName

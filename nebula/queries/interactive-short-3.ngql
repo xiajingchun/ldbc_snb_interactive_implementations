@@ -1,0 +1,8 @@
+MATCH (n:Person)-[r:KNOWS]-(friend)
+  WHERE id(n) == $personId
+  RETURN
+    id(friend) AS personId,
+    friend.Person.firstName AS firstName,
+    friend.Person.lastName AS lastName,
+    r.creationDate AS friendshipCreationDate
+    ORDER BY friendshipCreationDate DESC, personId ASC

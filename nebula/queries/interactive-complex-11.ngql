@@ -1,0 +1,13 @@
+MATCH (person:Person)-[:KNOWS*1..2]-(friend:Person)
+  WHERE id(person) == $personId AND not(person==friend)
+  WITH DISTINCT friend
+MATCH (friend)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:"China"})
+  WHERE workAt.workFrom < $workFromYear
+  RETURN
+    id(friend) AS personId,
+    friend.Person.firstName AS personFirstName,
+    friend.Person.lastName AS personLastName,
+    company.Organisation.name AS organizationName,
+    workAt.workFrom AS organizationWorkFromYear
+    ORDER BY organizationWorkFromYear ASC, personId ASC, organizationName DESC
+    LIMIT 10

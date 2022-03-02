@@ -1,0 +1,11 @@
+MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(`comment`:`Comment`)-[:REPLY_OF]->(:Post)-[:HAS_TAG]->(`tag`:`Tag`),
+  (`tag`)-[:HAS_TYPE]->(tagClass:Tagclass)-[:IS_SUBCLASS_OF*0..100]->(baseTagClass:Tagclass)
+  WHERE id(n) == $personId AND (tagClass.Tagclass.name == $tagClassName OR baseTagClass.Tagclass.name == $tagClassName)
+  RETURN
+    id(friend) AS personId,
+    friend.Person.firstName AS personFirstName,
+    friend.Person.lastName AS personLastName,
+    collect(DISTINCT `tag`.`Tag`.name) AS tagNames,
+    count(DISTINCT `comment`) AS replyCount
+    ORDER BY replyCount DESC, personId ASC
+    LIMIT 20
