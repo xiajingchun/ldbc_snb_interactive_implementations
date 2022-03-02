@@ -1,0 +1,4 @@
+INSERT VERTEX IF NOT EXISTS
+    Post(creationDate, locationIP, browserUsed, content, imageFile, length)
+VALUES
+    $postId:(CASE $imageFile == '' WHEN true THEN NULL ELSE $imageFile END,  $creationDate, $loactionIP, $browserUsed, $language, CASE $content == '' WHEN true THEN NULL ELSE $content END, $length)
