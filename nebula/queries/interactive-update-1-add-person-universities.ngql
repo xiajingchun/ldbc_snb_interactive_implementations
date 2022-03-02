@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    STUDY_AT(classYear)
+VALUES
+    $personId->$organizationId:($studiesFromYear)

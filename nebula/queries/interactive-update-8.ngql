@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    KNOWS(creationDate)
+VALUES
+    $person1Id->$person2Id:($creationDate)

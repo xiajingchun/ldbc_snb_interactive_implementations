@@ -22,7 +22,7 @@ public class NebulaInteractiveTest  extends InteractiveTest {
         properties.put("user", "root");
         properties.put("password", "nebula");
         properties.put("spaceName", "sf300");
-        properties.put("queryDir", "/Users/chenpengwei/Documents/project/ldbc_snb_interactive_implementations/nebula/queries");
+        properties.put("queryDir", "queries");
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "true");
         properties.put("printQueryResults", "true");

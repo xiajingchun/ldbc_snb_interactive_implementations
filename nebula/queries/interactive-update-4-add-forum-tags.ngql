@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    HAS_TAG()
+VALUES
+    $forumId->$tagId:()

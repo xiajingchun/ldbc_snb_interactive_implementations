@@ -1,0 +1,4 @@
+INSERT VERTEX IF NOT EXISTS
+    Person(firstName, lastName, gender, birthday, creationDate, locationIP, browserUsed)
+VALUES
+    $personId:($personFirstName, $personLastName, $gender, $birthday, $creationDate, $locationIP, $browserUsed);

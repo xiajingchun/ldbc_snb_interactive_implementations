@@ -7,6 +7,7 @@ import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.converter.NebulaConverter;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaUpdateOperationHandler;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
@@ -570,11 +571,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
     // Interactive updates
     
-    public static class Update1AddPerson extends NebulaUpdateOperationHandler<LdbcUpdate1AddPerson> {
+    public static class Update1AddPerson extends  NebulaMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
 
         @Override
-        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate1AddPerson operation) {
-            return state.getQueryStore().getUpdate1Single(operation);
+        public List<String> getQueryString(NebulaDbConnectionState state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getUpdate1Multiple(operation);
         }
     }
 
@@ -594,11 +595,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
         }
     }
 
-    public static class Update4AddForum extends NebulaUpdateOperationHandler<LdbcUpdate4AddForum> {
+    public static class Update4AddForum extends NebulaMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
 
         @Override
-        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate4AddForum operation) {
-            return state.getQueryStore().getUpdate4Single(operation);
+        public List<String> getQueryString(NebulaDbConnectionState state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getUpdate4Multiple(operation);
         }
     }
 
@@ -610,19 +611,19 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
         }
     }
 
-    public static class Update6AddPost extends NebulaUpdateOperationHandler<LdbcUpdate6AddPost> {
+    public static class Update6AddPost extends NebulaMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
 
         @Override
-        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate6AddPost operation) {
-            return state.getQueryStore().getUpdate6Single(operation);
+        public List<String> getQueryString(NebulaDbConnectionState state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getUpdate6Multiple(operation);
         }
     }
 
-    public static class Update7AddComment extends NebulaUpdateOperationHandler<LdbcUpdate7AddComment> {
+    public static class Update7AddComment extends NebulaMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
 
         @Override
-        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate7AddComment operation) {
-            return state.getQueryStore().getUpdate7Single(operation);
+        public List<String> getQueryString(NebulaDbConnectionState state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getUpdate7Multiple(operation);
         }
     }
 

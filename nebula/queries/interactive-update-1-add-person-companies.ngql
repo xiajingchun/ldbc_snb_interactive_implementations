@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    WORK_AT(workFrom)
+VALUES
+    $personId->$organizationId:($worksFromYear)
