@@ -6,6 +6,7 @@ import com.vesoft.nebula.DateTime;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class NebulaConverter extends Converter {
@@ -30,4 +31,13 @@ public class NebulaConverter extends Converter {
         long toEpoch = convertDateTimesToEpoch(to);
         return (int)((toEpoch - fromEpoch) / 1000 / 60);
     }
+
+
+    @Override
+    public String convertDateTime(Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return "datetime('" + sdf.format(date) + "')";
+    }
+
 }
