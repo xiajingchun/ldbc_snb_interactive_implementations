@@ -9,6 +9,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.net.Session;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 public abstract class NebulaSingletonOperationHandler <TOperation extends Operation<TOperationResult>, TOperationResult>
         implements SingletonOperationHandler<TOperationResult, TOperation, NebulaDbConnectionState> {
@@ -39,5 +40,5 @@ public abstract class NebulaSingletonOperationHandler <TOperation extends Operat
         }
     }
 
-    public abstract TOperationResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException;
+    public abstract TOperationResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException;
 }

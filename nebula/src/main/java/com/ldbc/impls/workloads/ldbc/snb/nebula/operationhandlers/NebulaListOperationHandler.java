@@ -47,6 +47,6 @@ public abstract class NebulaListOperationHandler <TOperation extends Operation<L
         }
     }
 
-    public abstract TOperationResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException;
+    public abstract TOperationResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException;
 
 }

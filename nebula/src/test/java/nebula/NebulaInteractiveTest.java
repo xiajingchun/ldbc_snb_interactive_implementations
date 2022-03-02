@@ -1,11 +1,11 @@
 package nebula;
 
-import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.interactive.NebulaInteractiveDb;
-import org.junit.Assert;
+import com.ldbc.impls.workloads.ldbc.snb.nebula.converter.NebulaConverter;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,5 +29,10 @@ public class NebulaInteractiveTest  extends InteractiveTest {
 
 
         return properties;
+    }
+
+    @Test
+    public void testConvertTime() throws ParseException {
+        System.out.println(NebulaConverter.convertDateTimesToEpoch("2010-02-14T15:32:10.447"));
     }
 }
