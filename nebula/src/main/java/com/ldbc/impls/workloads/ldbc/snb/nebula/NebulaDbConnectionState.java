@@ -26,12 +26,16 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
     private final String user;
 
     private final String password;
+
+    private final String spaceName;
+
     public NebulaDbConnectionState(Map<String, String> properties, NebulaQueryStore queryStore) throws UnknownHostException {
         super(properties, queryStore);
 
         user = properties.get("user");
         password = properties.get("password");
         String endPoint = properties.get("endpoint");
+        spaceName = properties.get("spaceName");
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(500);
@@ -50,7 +54,7 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
             try {
                 Session newSession = pool.getSession(user, password, false);
                 // Currently we hard code to use sf300
-                newSession.execute("USE sf300");
+                newSession.execute("USE " + spaceName);
                 session.set(newSession);
             } catch (Exception e) {
                 e.printStackTrace();

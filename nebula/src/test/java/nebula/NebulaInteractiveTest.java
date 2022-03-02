@@ -21,13 +21,12 @@ public class NebulaInteractiveTest  extends InteractiveTest {
         properties.put("endpoint", "192.168.15.3:9669,192.168.15.5:9669,192.168.15.6:9669");
         properties.put("user", "root");
         properties.put("password", "nebula");
+        properties.put("spaceName", "sf300");
         properties.put("queryDir", "/Users/chenpengwei/Documents/project/ldbc_snb_interactive_implementations/nebula/queries");
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "true");
         properties.put("printQueryResults", "true");
 
-        properties.put("ldbc.snb.interactive.LdbcQuery10_enable", "false");
-        properties.put("ldbc.snb.interactive.LdbcQuery14_enable", "false");
 
         return properties;
     }
