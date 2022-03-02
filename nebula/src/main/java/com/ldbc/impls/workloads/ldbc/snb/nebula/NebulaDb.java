@@ -7,6 +7,7 @@ import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.converter.NebulaConverter;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.nebula.operationhandlers.NebulaUpdateOperationHandler;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
@@ -111,7 +112,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long messageId = Long.parseLong(record.get(3).asString().substring(8));
             String messageContent = record.get(4).asString();
             long messageCreationDate = 0;
-            // TODO: long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            // TODO: long messageCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(5).asLong());
 
             return new LdbcQuery2Result(
                     personId,
@@ -209,12 +210,12 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             long likeCreationDate =0;
-            // TODO: long likeCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            // TODO: long likeCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(3).asLong());
             // prefix: message-
             long messageId = Long.parseLong(record.get(4).asString().substring(8));
             String messageContent = record.get(5).asString();
             int minutesLatency = 0;
-            // TODO: int minutesLatency = CypherConverter.convertStartAndEndDateToLatency(record.get(6).asLong(), record.get(3).asLong());
+            // TODO: int minutesLatency = NebulaConverter.convertStartAndEndDateToLatency(record.get(6).asLong(), record.get(3).asLong());
             boolean isNew = record.get(7).asBoolean();
             return new LdbcQuery7Result(
                     personId,
@@ -241,7 +242,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             long commentCreationDate = 0;
-            // TODO: long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            // TODO: long commentCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(3).asLong());
             // prefix: comment-
             long commentId = Long.parseLong(record.get(4).asString().substring(8));
             String commentContent = record.get(5).asString();
@@ -271,7 +272,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long messageId = Long.parseLong(record.get(3).asString().substring(8));
             String messageContent = record.get(4).asString();
             long messageCreationDate = 0;
-            // long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            // long messageCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(5).asLong());
             return new LdbcQuery9Result(
                     personId,
                     personFirstName,
@@ -437,7 +438,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long messageId = Long.parseLong(record.get(5).asString().substring(5));
             String messageContent = record.get(1).asString();
             long messageCreationDate = 0;
-            // TODO: long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            // TODO: long messageCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(2).asLong());
             long originalPostId = record.get(3).asLong();
             long originalPostAuthorId = record.get(4).asLong();
             String originalPostAuthorFirstName = record.get(5).asString();
@@ -467,7 +468,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
             long friendshipCreationDate = 0;
-            // TODO: long friendshipCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            // TODO: long friendshipCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(3).asLong());
             return new LdbcShortQuery3PersonFriendsResult(
                     personId,
                     firstName,
@@ -487,7 +488,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
             // Pay attention, the spec's and the implementation's parameter orders are different.
             long messageCreationDate = 0;
-            // TODO: long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(0).asLong());
+            // TODO: long messageCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(0).asLong());
             String messageContent = record.get(1).asString();
             return new LdbcShortQuery4MessageContentResult(
                     messageContent,
@@ -551,7 +552,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long commentId = Long.parseLong(record.get(0).asString().substring(8));
             String commentContent = record.get(1).asString();
             long commentCreationDate = 0;
-            // TODO: long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            // TODO: long commentCreationDate = NebulaConverter.convertLongTimestampToEpoch(record.get(2).asLong());
             long replyAuthorId = record.get(3).asLong();
             String replyAuthorFirstName = record.get(4).asString();
             String replyAuthorLastName = record.get(5).asString();
@@ -564,6 +565,72 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     replyAuthorFirstName,
                     replyAuthorLastName,
                     replyAuthorKnowsOriginalMessageAuthor);
+        }
+    }
+
+    // Interactive updates
+    
+    public static class Update1AddPerson extends NebulaUpdateOperationHandler<LdbcUpdate1AddPerson> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getUpdate1Single(operation);
+        }
+    }
+
+    public static class Update2AddPostLike extends NebulaUpdateOperationHandler<LdbcUpdate2AddPostLike> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate2AddPostLike operation) {
+            return state.getQueryStore().getUpdate2(operation);
+        }
+    }
+
+    public static class Update3AddCommentLike extends NebulaUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
+            return state.getQueryStore().getUpdate3(operation);
+        }
+    }
+
+    public static class Update4AddForum extends NebulaUpdateOperationHandler<LdbcUpdate4AddForum> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getUpdate4Single(operation);
+        }
+    }
+
+    public static class Update5AddForumMembership extends NebulaUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
+            return state.getQueryStore().getUpdate5(operation);
+        }
+    }
+
+    public static class Update6AddPost extends NebulaUpdateOperationHandler<LdbcUpdate6AddPost> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getUpdate6Single(operation);
+        }
+    }
+
+    public static class Update7AddComment extends NebulaUpdateOperationHandler<LdbcUpdate7AddComment> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getUpdate7Single(operation);
+        }
+    }
+
+    public static class Update8AddFriendship extends NebulaUpdateOperationHandler<LdbcUpdate8AddFriendship> {
+
+        @Override
+        public String getQueryString(NebulaDbConnectionState state, LdbcUpdate8AddFriendship operation) {
+            return state.getQueryStore().getUpdate8(operation);
         }
     }
 }
