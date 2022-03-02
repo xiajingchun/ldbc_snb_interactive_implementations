@@ -1,4 +1,4 @@
 INSERT VERTEX IF NOT EXISTS
-    Comment(creationDate, locationIP, browserUsed, content, length)
+    `Comment`(creationDate, locationIP, browserUsed, content, length)
 VALUES
     $commentId:($creationDate, $locationIP, $browserUsed, $content, $length)
