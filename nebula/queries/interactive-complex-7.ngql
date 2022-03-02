@@ -17,7 +17,7 @@ MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:P
       WHEN true THEN latestLike.msg.content
       ELSE latestLike.msg.imageFile
     END AS messageContent,
-    latestLike.msg.creationDate AS messageCreationDate,
+    toString(latestLike.msg.creationDate) AS messageCreationDate,
     p IS NULL AS isNew
     ORDER BY likeCreationDate DESC, personId ASC
     LIMIT 20
