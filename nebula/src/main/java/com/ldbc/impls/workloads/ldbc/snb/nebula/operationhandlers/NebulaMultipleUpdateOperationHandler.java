@@ -21,9 +21,11 @@ public abstract class NebulaMultipleUpdateOperationHandler<TOperation extends Op
             for (String queryString : queryStrings) {
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
                 session.execute(queryString);
+                
             }
         } catch (Exception e) {
             throw new DbException(e);
         }
+        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
     }
 }
