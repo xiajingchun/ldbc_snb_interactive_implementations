@@ -5,27 +5,34 @@ MATCH (person:Person)
 WITH person, id(countryX) AS countryXId, id(countryY) AS countryYId
 LIMIT 1
 MATCH (city:Place)-[:IS_PART_OF]->(country:Place)
-WITH person,countryXId, countryYId, city, country
-WHERE id(country) IN [countryXId, countryYId]
-WITH person, countryXId, countryYId, collect(city) AS cities
+WITH person, id(country) AS countryId, countryXId, countryYId, id(city) AS cityId
+WHERE countryId IN [countryXId, countryYId]
+WITH person, countryXId, countryYId, collect(cityId) AS cities
 MATCH (person)-[:KNOWS*1..2]-(friend)-[:IS_LOCATED_IN]->(city)
-  WHERE person<>friend AND NOT city IN cities
+WITH id(person) AS personId, friend, id(city) AS cityId, cities, countryXId, countryYId
+WHERE personId<>id(friend) AND NOT cityId IN cities
 WITH DISTINCT friend, countryXId, countryYId
-MATCH (friend)<-[:HAS_CREATOR]-(message)-[:IS_LOCATED_IN]->(country)
-  WHERE datetime($endDate) > message.`Comment`.creationDate >= datetime($startDate)
+MATCH (friend)<-[:HAS_CREATOR]-(message:Post)
+WHERE
+  CASE
+  WHEN $endDate > message.`Comment`.creationDate AND message.`Comment`.creationDate >= $startDate THEN true
+  WHEN $endDate > message.Post.creationDate AND message.Post.creationDate >= $startDate THEN true
+  ELSE false
+  END
+MATCH (message)-[:IS_LOCATED_IN]->(country)
 WITH friend, id(country) AS countryId, countryXId, countryYId
-  WHERE countryId IN [countryXId, countryYId]
+WHERE countryId IN [countryXId, countryYId]
 WITH friend,
   CASE WHEN countryId==countryYId THEN 1 ELSE 0 END AS messageX,
   CASE WHEN countryId==countryYId THEN 1 ELSE 0 END AS messageY
-  WITH friend, sum(messageX) AS xCount, sum(messageY) AS yCount
-  WHERE xCount>0 AND yCount>0
-  RETURN
-    id(friend) AS friendId,
-    friend.Person.firstName AS friendFirstName,
-    friend.Person.lastName AS friendLastName,
-    xCount,
-    yCount,
-    xCount + yCount AS xyCount
-    ORDER BY xyCount DESC, friendId ASC
-    LIMIT 20
+WITH friend, sum(messageX) AS xCount, sum(messageY) AS yCount
+WHERE xCount>0 AND yCount>0
+RETURN
+  id(friend) AS friendId,
+  friend.Person.firstName AS friendFirstName,
+  friend.Person.lastName AS friendLastName,
+  xCount,
+  yCount,
+  xCount + yCount AS xyCount
+  ORDER BY xyCount DESC, friendId ASC
+  LIMIT 20
