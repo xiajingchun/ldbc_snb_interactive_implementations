@@ -23,6 +23,10 @@ public abstract class NebulaSingletonOperationHandler <TOperation extends Operat
             final String queryString = getQueryString(state, operation);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
             final ResultSet result = session.execute(queryString);
+            if (!result.isSucceeded()) {
+                resultReporter.report(0, noResult(), operation);
+                return;
+            }
             if (result.rowsSize() > 0) {
                 final ResultSet.Record record = result.rowValues(0);
                 resultCount++;
@@ -41,4 +45,6 @@ public abstract class NebulaSingletonOperationHandler <TOperation extends Operat
     }
 
     public abstract TOperationResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException;
+
+    public abstract TOperationResult  noResult();
 }
