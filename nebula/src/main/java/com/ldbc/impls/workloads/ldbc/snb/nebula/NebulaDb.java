@@ -362,6 +362,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
         public LdbcQuery13Result convertSingleResult(ResultSet.Record record) {
             return new LdbcQuery13Result((int) record.get(0).asLong());
         }
+
+        @Override
+        public LdbcQuery13Result noResult() {
+            return new LdbcQuery13Result(-1);
+        }
     }
 
     public static class InteractiveQuery14 extends NebulaListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
@@ -414,6 +419,19 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     cityId,
                     gender,
                     creationDate);
+        }
+
+        @Override
+        public LdbcShortQuery1PersonProfileResult noResult() {
+            return new LdbcShortQuery1PersonProfileResult(
+                    "",
+                    "",
+                    0,
+                    "",
+                    "",
+                    0,
+                    "",
+                    0);
         }
     }
 
@@ -483,6 +501,13 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     messageContent,
                     messageCreationDate);
         }
+
+        @Override
+        public LdbcShortQuery4MessageContentResult noResult() {
+            return new LdbcShortQuery4MessageContentResult(
+                    "",
+                    0);
+        }
     }
 
     public static class ShortQuery5MessageCreator extends NebulaSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult> {
@@ -501,6 +526,14 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     personId,
                     firstName,
                     lastName);
+        }
+
+        @Override
+        public LdbcShortQuery5MessageCreatorResult noResult() {
+            return new LdbcShortQuery5MessageCreatorResult(
+                    0,
+                    "",
+                    "");
         }
     }
 
@@ -525,6 +558,16 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                     moderatorId,
                     moderatorFirstName,
                     moderatorLastName);
+        }
+
+        @Override
+        public LdbcShortQuery6MessageForumResult noResult() {
+            return new LdbcShortQuery6MessageForumResult(
+                    0,
+                    "",
+                    0,
+                    "",
+                    "");
         }
     }
 
