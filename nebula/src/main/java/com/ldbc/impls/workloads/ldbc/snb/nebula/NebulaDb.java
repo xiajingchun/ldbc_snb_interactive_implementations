@@ -516,7 +516,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             // forum-
             long forumId = Long.parseLong(record.get(0).asString().substring(6));
             String forumTitle = record.get(1).asString();
-            long moderatorId = record.get(2).asLong();
+            long moderatorId = Long.parseLong(record.get(2).asString().substring(7));
             String moderatorFirstName = record.get(3).asString();
             String moderatorLastName = record.get(4).asString();
             return new LdbcShortQuery6MessageForumResult(
@@ -541,7 +541,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long commentId = Long.parseLong(record.get(0).asString().substring(8));
             String commentContent = record.get(1).asString();
             long commentCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(2).asString());
-            long replyAuthorId = record.get(3).asLong();
+            long replyAuthorId = Long.parseLong(record.get(3).asString().substring(7));
             String replyAuthorFirstName = record.get(4).asString();
             String replyAuthorLastName = record.get(5).asString();
             boolean replyAuthorKnowsOriginalMessageAuthor = record.get(6).asBoolean();
