@@ -50,6 +50,11 @@ public class NebulaInteractiveTest  extends InteractiveTest {
     }
 
     @Test
+    public void testShortQuery4_3() throws Exception {
+        run(db, new LdbcShortQuery4MessageContent(140737931644863L));
+    }
+
+    @Test
     public void testShortQuery5_2() throws Exception {
         run(db, new LdbcShortQuery5MessageCreator(140738150173765L));
     }
