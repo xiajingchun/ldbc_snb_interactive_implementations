@@ -1,5 +1,5 @@
- MATCH (m:`Comment`)<-[:REPLY_OF]-(c)-[:HAS_CREATOR]->(p:Person)
-  WHERE id(m) == $commentId
+ MATCH (m)<-[:REPLY_OF]-(c)-[:HAS_CREATOR]->(p:Person)
+  WHERE id(m) == $commentId OR id(m) == $postId
   OPTIONAL MATCH (m)-[:HAS_CREATOR]->(a:Person)-[r:KNOWS]-(p)
   RETURN
     id(c) AS commentId,

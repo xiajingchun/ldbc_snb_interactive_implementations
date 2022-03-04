@@ -1,5 +1,5 @@
-MATCH (m:`Comment`)
-  WHERE id(m) == $commentId
+MATCH (m)
+  WHERE id(m) == $commentId OR id(m) == $postId
   RETURN
     m.`Comment`.creationDate as messageCreationDate,
     CASE exists(m.`Comment`.content)
