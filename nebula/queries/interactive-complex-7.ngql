@@ -11,13 +11,13 @@ MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:P
     id(liker) AS personId,
     liker.Person.firstName AS personFirstName,
     liker.Person.lastName AS personLastName,
-    toString(latestLike.likeTime) AS likeCreationDate,
+    latestLike.likeTime AS likeCreationDate,
     id(latestLike.msg) AS messageId,
     CASE exists(latestLike.msg.content)
       WHEN true THEN latestLike.msg.content
       ELSE latestLike.msg.imageFile
     END AS messageContent,
-    toString(latestLike.msg.creationDate) AS messageCreationDate,
+    latestLike.msg.creationDate AS messageCreationDate,
     p IS NULL AS isNew
     ORDER BY likeCreationDate DESC, personId ASC
     LIMIT 20

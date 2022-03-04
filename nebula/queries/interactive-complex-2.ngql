@@ -9,6 +9,6 @@ MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:`Comment`)
       WHEN true THEN message.`Comment`.content
       ELSE message.`Comment`.imageFile
     END AS messageContent,
-    toString(message.`Comment`.creationDate) AS messageCreationDate
+    message.`Comment`.creationDate AS messageCreationDate
     ORDER BY messageCreationDate DESC, messageId ASC
     LIMIT 20

@@ -5,7 +5,7 @@ MATCH
     id(person) AS personId,
     person.Person.firstName AS personFirstName,
     person.Person.lastName AS personLastName,
-    toString(comment.`Comment`.creationDate) AS commentCreationDate,
+    comment.`Comment`.creationDate AS commentCreationDate,
     id(comment) AS commentId,
     comment.`Comment`.content AS commentContent
     ORDER BY commentCreationDate DESC, commentId ASC
