@@ -20,8 +20,10 @@ public abstract class NebulaMultipleUpdateOperationHandler<TOperation extends Op
             List<String> queryStrings = getQueryString(state, operation);
             for (String queryString : queryStrings) {
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
-                session.execute(queryString);
-                
+                ResultSet result = session.execute(queryString);
+                if (state.isPrintErrors() && !result.isSucceeded()) {
+                    System.out.println(result.getErrorMessage());
+                }
             }
         } catch (Exception e) {
             throw new DbException(e);

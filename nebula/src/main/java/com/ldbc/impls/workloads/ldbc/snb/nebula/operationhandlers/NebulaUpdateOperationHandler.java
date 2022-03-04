@@ -6,6 +6,7 @@ import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.nebula.NebulaDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandler;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.net.Session;
 
 public abstract class NebulaUpdateOperationHandler <TOperation extends Operation<LdbcNoResult>>
@@ -16,7 +17,10 @@ public abstract class NebulaUpdateOperationHandler <TOperation extends Operation
             try {
                 final String queryString = getQueryString(state, operation);
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
-                session.execute(queryString);
+                ResultSet result = session.execute(queryString);
+                if (state.isPrintErrors() && !result.isSucceeded()) {
+                    System.out.println(result.getErrorMessage());
+                }
             } catch (Exception e) {
                 throw new DbException(e);
             }
