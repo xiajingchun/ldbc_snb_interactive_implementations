@@ -52,4 +52,10 @@ public class NebulaConverter extends Converter {
         return "date('" + sdf.format(date) + "')";
     }
 
+    public static String convertDateToStr(Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return "'" + sdf.format(date) + "'";
+    }
+
 }
