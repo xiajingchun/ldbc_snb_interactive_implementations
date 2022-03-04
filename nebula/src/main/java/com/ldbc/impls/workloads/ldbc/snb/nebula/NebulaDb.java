@@ -1,5 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.nebula;
 
+import com.ldbc.driver.Db;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
@@ -21,10 +22,55 @@ import java.util.List;
 import java.util.Map;
 
 public class NebulaDb  extends BaseDb<NebulaQueryStore> {
+
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
+            NebulaID.ID_PREFIX_SIZE = Integer.parseInt(properties.get("idPrefixSize"));
+            for (String idPrefixKV : properties.get("idPrefix").split(",")) {
+                String[] kv = idPrefixKV.split(":");
+                String idName = kv[0].trim();
+                String idPrefix = kv[1].trim();
+                if (idPrefix.length() != NebulaID.ID_PREFIX_SIZE) {
+                    throw new DbException("ID prefix of: "+ idPrefix + " not match the prefix size:" + NebulaID.ID_PREFIX_SIZE);
+                }
+                switch (idName) {
+                    case "comment": {
+                        NebulaID.COMMENT_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "forum": {
+                        NebulaID.FORUM_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "organisation": {
+                        NebulaID.ORGANISATION_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "person": {
+                        NebulaID.PERSON_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "place": {
+                        NebulaID.PLACE_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "post": {
+                        NebulaID.POST_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "tag": {
+                        NebulaID.TAG_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                    case "tagclass": {
+                        NebulaID.TAGCLASS_ID_PREFIX = idPrefix;
+                        break;
+                    }
+                }
+            }
             dcs = new NebulaDbConnectionState(properties, new NebulaQueryStore(properties.get("queryDir")));
+
         } catch (UnknownHostException e) {
             throw new DbException(e.getMessage());
         }
@@ -66,12 +112,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                 // TODO:
             }
 
-            // prefix: person-
-            long friendId = Long.parseLong(record.get(0).asString().substring(7));
+            long friendId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = (int) record.get(2).asLong();
             long friendBirthday = NebulaConverter.convertDateToEpoch(record.get(3).asString());
-            long friendCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(4).asString());
+            long friendCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(4).asDateTime().getLocalDateTimeStr());
             String friendGender = record.get(5).asString();
             String friendBrowserUsed = record.get(6).asString();
             String friendLocationIp = record.get(7).asString();
@@ -103,14 +148,12 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery2Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // prefix: person-
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            // TODO: not sure, prefix: message-
-            long messageId = Long.parseLong(record.get(3).asString().substring(8));
+            long messageId = Long.parseLong(record.get(3).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String messageContent = record.get(4).asString();
-            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(5).asString());
+            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(5).asDateTime().getLocalDateTimeStr());
 
             return new LdbcQuery2Result(
                     personId,
@@ -131,8 +174,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery3Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
-            // prefix: person-
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             int xCount = (int) record.get(3).asLong();
@@ -203,15 +245,14 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery7Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // prefix: person-
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long likeCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asString());
-            // prefix: message-
-            long messageId = Long.parseLong(record.get(4).asString().substring(8));
+            long likeCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asDateTime().getLocalDateTimeStr());
+            long messageId = Long.parseLong(record.get(4).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String messageContent = record.get(5).asString();
-            int minutesLatency = NebulaConverter.convertStartAndEndDateToLatency(record.get(6).asString(), record.get(3).asString());
+            int minutesLatency = NebulaConverter.convertStartAndEndDateToLatency(
+                    record.get(6).asDateTime().getLocalDateTimeStr(), record.get(3).asDateTime().getLocalDateTimeStr());
             boolean isNew = record.get(7).asBoolean();
             return new LdbcQuery7Result(
                     personId,
@@ -234,12 +275,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery8Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long commentCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asString());
-            // prefix: comment-
-            long commentId = Long.parseLong(record.get(4).asString().substring(8));
+            long commentCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asDateTime().getLocalDateTimeStr());
+            long commentId = Long.parseLong(record.get(4).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String commentContent = record.get(5).asString();
             return new LdbcQuery8Result(
                     personId,
@@ -260,13 +300,12 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery9Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            // message-
-            long messageId = Long.parseLong(record.get(3).asString().substring(8));
+            long messageId = Long.parseLong(record.get(3).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String messageContent = record.get(4).asString();
-            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(5).asString());
+            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(5).asDateTime().getLocalDateTimeStr());
             return new LdbcQuery9Result(
                     personId,
                     personFirstName,
@@ -286,7 +325,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery10Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             int commonInterestScore = (int) record.get(3).asLong();
@@ -311,7 +350,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery11Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException  {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             String organizationName = record.get(3).asString();
@@ -334,7 +373,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery12Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException  {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             List<String> tagNames = new ArrayList<>();
@@ -405,11 +444,10 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long birthday = NebulaConverter.convertDateToEpoch(record.get(2).asString());
             String locationIP = record.get(3).asString();
             String browserUsed = record.get(4).asString();
-            // prefix: city-
-            long cityId = Long.parseLong(record.get(5).asString().substring(5));
+            long cityId = Long.parseLong(record.get(5).asString().substring(NebulaID.ID_PREFIX_SIZE));
 
             String gender = record.get(6).asString();
-            long creationDate = NebulaConverter.convertDateTimesToEpoch(record.get(7).asString());
+            long creationDate = NebulaConverter.convertDateTimesToEpoch(record.get(7).asDateTime().getLocalDateTimeStr());
             return new LdbcShortQuery1PersonProfileResult(
                     firstName,
                     lastName,
@@ -444,12 +482,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery2PersonPostsResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // message-
-            long messageId = Long.parseLong(record.get(5).asString().substring(5));
+            long messageId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String messageContent = record.get(1).asString();
-            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(2).asString());
-            long originalPostId = record.get(3).asLong();
-            long originalPostAuthorId = record.get(4).asLong();
+            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(2).asDateTime().getLocalDateTimeStr());
+            long originalPostId = Long.parseLong(record.get(3).asString().substring(NebulaID.ID_PREFIX_SIZE));
+            long originalPostAuthorId = Long.parseLong(record.get(4).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String originalPostAuthorFirstName = record.get(5).asString();
             String originalPostAuthorLastName = record.get(6).asString();
             return new LdbcShortQuery2PersonPostsResult(
@@ -472,11 +509,10 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery3PersonFriendsResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // person-
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
-            long friendshipCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asString());
+            long friendshipCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(3).asDateTime().getLocalDateTimeStr());
             return new LdbcShortQuery3PersonFriendsResult(
                     personId,
                     firstName,
@@ -494,8 +530,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // Pay attention, the spec's and the implementation's parameter orders are different.
-            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(0).asString());
+            long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(0).asDateTime().getLocalDateTimeStr());
             String messageContent = record.get(1).asString();
             return new LdbcShortQuery4MessageContentResult(
                     messageContent,
@@ -519,7 +554,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery5MessageCreatorResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
-            long personId = Long.parseLong(record.get(0).asString().substring(7));
+            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
             return new LdbcShortQuery5MessageCreatorResult(
@@ -546,10 +581,9 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery6MessageForumResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException {
-            // forum-
-            long forumId = Long.parseLong(record.get(0).asString().substring(6));
+            long forumId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String forumTitle = record.get(1).asString();
-            long moderatorId = Long.parseLong(record.get(2).asString().substring(7));
+            long moderatorId = Long.parseLong(record.get(2).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String moderatorFirstName = record.get(3).asString();
             String moderatorLastName = record.get(4).asString();
             return new LdbcShortQuery6MessageForumResult(
@@ -580,11 +614,10 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcShortQuery7MessageRepliesResult convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException, ParseException {
-            // comment-
-            long commentId = Long.parseLong(record.get(0).asString().substring(8));
+            long commentId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String commentContent = record.get(1).asString();
-            long commentCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(2).asString());
-            long replyAuthorId = Long.parseLong(record.get(3).asString().substring(7));
+            long commentCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(2).asDateTime().getLocalDateTimeStr());
+            long replyAuthorId = Long.parseLong(record.get(3).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String replyAuthorFirstName = record.get(4).asString();
             String replyAuthorLastName = record.get(5).asString();
             boolean replyAuthorKnowsOriginalMessageAuthor = record.get(6).asBoolean();

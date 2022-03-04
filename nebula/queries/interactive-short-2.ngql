@@ -7,11 +7,10 @@ MATCH (p)-[:HAS_CREATOR]->(c)
     WHEN "Comment" THEN coalesce(m.`Comment`.imageFile,m.`Comment`.content)
     ELSE coalesce(m.Post.imageFile,m.Post.content)
   END AS messageContent,
-  toString（
   CASE tags(m)[0]
     WHEN "Comment" THEN m.`Comment`.creationDate
     ELSE m.Post.creationDate
-  END) AS messageCreationDate,
+  END AS messageCreationDate,
   id(p) AS originalPostId,
   id(c) AS originalPostAuthorId,
   c.Person.firstName as originalPostAuthorFirstName,
