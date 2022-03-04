@@ -3,8 +3,14 @@
   OPTIONAL MATCH (m)-[:HAS_CREATOR]->(a:Person)-[r:KNOWS]-(p)
   RETURN
     id(c) AS commentId,
-    c.`Comment`.content AS commentContent,
-    c.`Comment`.creationDate AS commentCreationDate,
+    CASE
+      WHEN exists(c.`Comment`.content) THEN c.`Comment`.content
+      ELSE c.Post.content
+    END AS commentContent,
+    CASE
+      WHEN exists(c.`Comment`.creationDate) THEN c.`Comment`.creationDate
+      ELSE c.Post.creationDate
+    END AS commentCreationDate,
     id(p) AS replyAuthorId,
     p.Person.firstName AS replyAuthorFirstName,
     p.Person.lastName AS replyAuthorLastName,
