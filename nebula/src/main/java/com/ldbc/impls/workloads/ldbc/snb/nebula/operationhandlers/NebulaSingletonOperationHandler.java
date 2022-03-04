@@ -23,6 +23,9 @@ public abstract class NebulaSingletonOperationHandler <TOperation extends Operat
             final String queryString = getQueryString(state, operation);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
             final ResultSet result = session.execute(queryString);
+            if (state.isPrintErrors() && !result.isSucceeded()) {
+                System.out.println(result.getErrorMessage());
+            }
             if (!result.isSucceeded()) {
                 resultReporter.report(0, noResult(), operation);
                 return;

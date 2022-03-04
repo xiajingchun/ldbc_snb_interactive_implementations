@@ -28,8 +28,10 @@ public abstract class NebulaListOperationHandler <TOperation extends Operation<L
         final ResultSet result;
         try {
             result = session.execute(queryString);
+            if (state.isPrintErrors() && !result.isSucceeded()) {
+                System.out.println(result.getErrorMessage());
+            }
             long rowSize = result.rowsSize();
-
             while (resultCount < rowSize) {
                 final ResultSet.Record record = result.rowValues(resultCount);
 

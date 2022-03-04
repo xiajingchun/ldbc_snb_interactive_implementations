@@ -29,6 +29,8 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
 
     private final String spaceName;
 
+    private final boolean printErrors;
+
     public NebulaDbConnectionState(Map<String, String> properties, NebulaQueryStore queryStore) throws UnknownHostException {
         super(properties, queryStore);
 
@@ -36,6 +38,7 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
         password = properties.get("password");
         String endPoint = properties.get("endpoint");
         spaceName = properties.get("spaceName");
+        printErrors = Boolean.parseBoolean(properties.get("printErrors"));
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(500);
@@ -67,5 +70,9 @@ public class NebulaDbConnectionState  extends BaseDbConnectionState<NebulaQueryS
     @Override
     public void close() throws IOException {
         pool.close();
+    }
+
+    public boolean isPrintErrors() {
+        return printErrors;
     }
 }
