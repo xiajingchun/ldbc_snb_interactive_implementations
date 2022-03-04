@@ -8,4 +8,4 @@ RETURN
   n.Person.browserUsed AS browserUsed,
   id(p) AS cityId,
   n.Person.gender AS gender,
-  toString(n.Person.creationDate) AS creationDate
+  n.Person.creationDate AS creationDate
