@@ -272,7 +272,7 @@ public class NebulaQueryStore extends QueryStore {
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
-                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDate(operation.birthday()))
+                        .put(LdbcUpdate1AddPerson.BIRTHDAY, NebulaConverter.convertDateToStr(operation.birthday()))
                         .put(LdbcUpdate1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate1AddPerson.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate1AddPerson.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
