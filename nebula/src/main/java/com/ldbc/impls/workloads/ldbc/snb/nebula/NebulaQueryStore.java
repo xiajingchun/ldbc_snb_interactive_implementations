@@ -182,7 +182,8 @@ public class NebulaQueryStore extends QueryStore {
     public String getShortQuery4MessageContent(LdbcShortQuery4MessageContent operation) {
         return prepare(
                 QueryType.InteractiveShortQuery4,
-                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())))
+                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())),
+                        "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.messageId())))
         );
     }
 
@@ -190,7 +191,8 @@ public class NebulaQueryStore extends QueryStore {
     public String getShortQuery5MessageCreator(LdbcShortQuery5MessageCreator operation) {
         return prepare(
                 QueryType.InteractiveShortQuery5,
-                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())))
+                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())),
+                                "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.messageId())))
         );
     }
 
@@ -198,7 +200,8 @@ public class NebulaQueryStore extends QueryStore {
     public String getShortQuery6MessageForum(LdbcShortQuery6MessageForum operation) {
         return prepare(
                 QueryType.InteractiveShortQuery6,
-                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())))
+                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())),
+                        "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.messageId())))
         );
     }
 
@@ -206,7 +209,8 @@ public class NebulaQueryStore extends QueryStore {
     public String getShortQuery7MessageReplies(LdbcShortQuery7MessageReplies operation) {
         return prepare(
                 QueryType.InteractiveShortQuery7,
-                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())))
+                ImmutableMap.of(COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.messageId())),
+                        "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.messageId())))
         );
     }
 
