@@ -1,0 +1,15 @@
+MATCH (m)<-[:REPLY_OF_COMMENT|REPLY_OF_POST]-(c:`Comment`)-[:COMMENT_HAS_CREATOR]->(p:Person)
+ WHERE id(m) == $commentId OR id(m) == $postId
+ OPTIONAL MATCH (m)-[:COMMENT_HAS_CREATOR|POST_HAS_CREATOR]->(a:Person)-[r:KNOWS]-(p)
+ RETURN
+   id(c) AS commentId,
+   c.`Comment`.content AS commentContent,
+   c.`Comment`.creationDate AS commentCreationDate,
+   id(p) AS replyAuthorId,
+   p.Person.firstName AS replyAuthorFirstName,
+   p.Person.lastName AS replyAuthorLastName,
+   CASE r
+     WHEN null THEN false
+     ELSE true
+   END AS replyAuthorKnowsOriginalMessageAuthor
+   ORDER BY commentCreationDate DESC, replyAuthorId

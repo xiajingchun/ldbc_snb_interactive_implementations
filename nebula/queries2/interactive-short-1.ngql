@@ -1,0 +1,11 @@
+MATCH (n:Person)-[:IS_LOCATED_IN]->(p:Place)
+WHERE id(n)==$personId
+RETURN
+  n.Person.firstName AS firstName,
+  n.Person.lastName AS lastName,
+  n.Person.birthday AS birthday,
+  n.Person.locationIP AS locationIP,
+  n.Person.browserUsed AS browserUsed,
+  id(p) AS cityId,
+  n.Person.gender AS gender,
+  n.Person.creationDate AS creationDate

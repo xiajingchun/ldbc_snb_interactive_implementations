@@ -1,0 +1,11 @@
+MATCH (m)
+  WHERE id(m) == $commentId OR id(m) == $postId
+  RETURN
+    CASE exists(m.`Comment`.creationDate)
+      WHEN true THEN m.`Comment`.creationDate
+      ELSE m.Post.creationDate
+      END AS messageCreationDate,
+    CASE exists(m.`Comment`.content)
+      WHEN true THEN coalesce(m.`Comment`.imageFile,m.`Comment`.content)
+      ELSE coalesce(m.Post.imageFile,m.Post.content)
+    END AS messageContent

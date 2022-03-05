@@ -1,0 +1,4 @@
+INSERT VERTEX IF NOT EXISTS
+    Forum(title, creationDate)
+VALUES
+    $forumId:($forumTitle, $creationDate)
