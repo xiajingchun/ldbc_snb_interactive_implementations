@@ -1,0 +1,17 @@
+MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATOR]-(message)
+  WHERE id(n) == $personId and (message.`Comment`.creationDate <= $maxDate or message.`Post`.creationDate <= $maxDate)
+  RETURN
+    id(friend) AS personId,
+    friend.Person.firstName AS personFirstName,
+    friend.Person.lastName AS personLastName,
+    id(message) AS messageId,
+    CASE exists(message.`Comment`.content)
+      WHEN true THEN coalesce(message.`Comment`.imageFile,message.`Comment`.content)
+      ELSE coalesce(message.Post.imageFile,message.Post.content)
+    END AS messageContent,
+    CASE exists(message.`Comment`.content)
+      WHEN true THEN message.`Comment`.creationDate
+      ELSE message.Post.creationDate
+    END AS messageCreationDate
+    ORDER BY messageCreationDate DESC, messageId ASC
+    LIMIT 20
