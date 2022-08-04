@@ -70,7 +70,6 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
                 }
             }
             dcs = new NebulaDbConnectionState(properties, new NebulaQueryStore(properties.get("queryDir")));
-
         } catch (UnknownHostException e) {
             throw new DbException(e.getMessage());
         }

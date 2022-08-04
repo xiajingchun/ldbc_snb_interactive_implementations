@@ -36,7 +36,7 @@ public class NebulaInteractiveTest  extends InteractiveTest {
 
     @Test
     public void testConvertTime() throws ParseException {
-        System.out.println(NebulaConverter.convertDateTimesToEpoch("2010-02-14T15:32:10.447"));
+        System.out.println(NebulaConverter.convertDateTimesToEpoch("2012-01-01T11:16:57.465000"));
     }
 
     @Test
