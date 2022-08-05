@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    COMMENT_HAS_CREATOR()
+VALUES
+    $commentId->$personId:()

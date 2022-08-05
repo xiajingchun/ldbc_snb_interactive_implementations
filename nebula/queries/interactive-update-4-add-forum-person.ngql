@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    HAS_MODERATOR()
+VALUES
+    $commentId->moderatorPersonId:()
