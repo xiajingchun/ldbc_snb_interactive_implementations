@@ -436,7 +436,7 @@ public class NebulaQueryStore extends QueryStore {
                 QueryType.InteractiveUpdate7AddCommentComment,
                 ImmutableMap.of(
                         LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
-                        "commentId", getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.replyToCommentId())))
+                        "replyToCommentId", getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.replyToCommentId())))
         ));
 
         // add Comment-[Post_reply_Of]->Post
