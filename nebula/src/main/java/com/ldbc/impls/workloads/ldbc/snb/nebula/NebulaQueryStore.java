@@ -311,6 +311,13 @@ public class NebulaQueryStore extends QueryStore {
                     )
             ));
         }
+        // add person->Place(city)
+        list.add(prepare(
+                QueryType.InteractiveUpdate1AddPersonPlace,
+                ImmutableMap.of(
+                        LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertIdForInsertion(operation.personId())),
+                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.cityId())))
+                        ));
         return list;
     }
 
@@ -335,7 +342,15 @@ public class NebulaQueryStore extends QueryStore {
                     )
             );
         }
+        // add Forum-[hasModerator]->Person
+        list.add(prepare(
+                QueryType.InteractiveUpdate4AddForumPerson,
+                ImmutableMap.of(
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertString(NebulaID.FORUM_ID_PREFIX + getConverter().convertIdForInsertion(operation.forumId())),
+                        "personId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.moderatorPersonId())))
+        ));
         return list;
+
     }
 
     @Override
@@ -364,6 +379,31 @@ public class NebulaQueryStore extends QueryStore {
                     )
             );
         }
+
+        // add Post-[isLocalIn]->Place(Country)
+        list.add(prepare(
+                QueryType.InteractiveUpdate6AddPostPlace,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertIdForInsertion(operation.postId())),
+                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
+        ));
+
+        // add Post-[hasCreator]->Person
+        list.add(prepare(
+                QueryType.InteractiveUpdate6AddPostPerson,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertIdForInsertion(operation.postId())),
+                        "personId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.authorPersonId())))
+        ));
+
+        // add Post-[containerOf]->Forum
+        list.add(prepare(
+                QueryType.InteractiveUpdate6AddPostForum,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertIdForInsertion(operation.postId())),
+                        "forumId", getConverter().convertString(NebulaID.FORUM_ID_PREFIX + getConverter().convertId(operation.forumId())))
+        ));
+
         return list;
     }
 
@@ -390,6 +430,39 @@ public class NebulaQueryStore extends QueryStore {
                     )
             );
         }
+
+        // add Comment-[Comment_reply_Of]->Comment
+        list.add(prepare(
+                QueryType.InteractiveUpdate7AddCommentComment,
+                ImmutableMap.of(
+                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                        "commentId", getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.replyToCommentId())))
+        ));
+
+        // add Comment-[Post_reply_Of]->Post
+        list.add(prepare(
+                QueryType.InteractiveUpdate7AddCommentPost,
+                ImmutableMap.of(
+                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                        "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.replyToPostId())))
+        ));
+
+        // add Comment-[isLocatedIn]->Place(Country)
+        list.add(prepare(
+                QueryType.InteractiveUpdate7AddCommentPlace,
+                ImmutableMap.of(
+                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
+        ));
+
+        // add Comment-[hasCreator]->Person
+        list.add(prepare(
+                QueryType.InteractiveUpdate7AddCommentPerson,
+                ImmutableMap.of(
+                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                        "personId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.authorPersonId())))
+        ));
+
         return list;
     }
 
