@@ -17,7 +17,7 @@ public class NebulaConverter extends Converter {
     public static long convertDateTimesToEpoch(String date) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(date).toInstant().toEpochMilli();
+        return sdf.parse(date.substring(0, date.length() - 3)).toInstant().toEpochMilli();
     }
 
     public static long convertDateToEpoch(String date) throws ParseException {
