@@ -1,13 +1,20 @@
-MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:Person)
+MATCH (person:Person)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATOR]-(message)<-[like:LIKES_COMMENT|LIKES_POST]-(liker:Person)
   WHERE id(person) == $personId
-  WITH liker, message, like.creationDate AS likeTime, person, id(message) AS messageId
-  ORDER BY likeTime DESC, messageId ASC
-  WITH
-  liker,
-  head(collect({msg:message, likeTime:likeTime})) AS latestLike,
-  person
-  OPTIONAL MATCH p = (liker)-[:KNOWS]-(person)
-  RETURN
+WITH
+    liker,
+    message,
+    like.creationDate AS likeTime,
+    person,
+    id(message) AS messageId
+ORDER BY
+    likeTime DESC,
+    messageId ASC
+WITH
+    liker,
+    head(collect({msg:message, likeTime:likeTime})) AS latestLike,
+    person
+OPTIONAL MATCH p = (liker)-[:KNOWS]-(person)
+RETURN
     id(liker) AS personId,
     liker.Person.firstName AS personFirstName,
     liker.Person.lastName AS personLastName,
@@ -19,5 +26,7 @@ MATCH (person:Person)<-[:HAS_CREATOR]-(message:`Comment`)<-[like:LIKES]-(liker:P
     END AS messageContent,
     latestLike.msg.creationDate AS messageCreationDate,
     p IS NULL AS isNew
-    ORDER BY likeCreationDate DESC, personId ASC
-    LIMIT 20
+ORDER BY
+    likeCreationDate DESC,
+    personId ASC
+LIMIT 20

@@ -2,7 +2,7 @@ MATCH (person:Person)-[:KNOWS*1..2]-(friend:Person)<-[membership:HAS_MEMBER]-(fo
   WHERE id(person) == $personId AND membership.joinDate > $minDate
   AND not(person==friend)
   WITH DISTINCT friend, forum
-  OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(forum)
+  OPTIONAL MATCH (friend)<-[:POST_HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(forum)
   WITH forum, count(post) AS postCount
   RETURN
     id(forum) AS forumId,
