@@ -1,4 +1,4 @@
-MATCH (m)-[:REPLY_OF*0..100]->(p:Post)<-[:CONTAINER_OF]-(f:Forum)-[:HAS_MODERATOR]->(mod:Person)
+MATCH (m)-[:REPLY_OF_COMMENT | REPLY_OF_POST *0..100]->(p:Post)<-[:CONTAINER_OF]-(f:Forum)-[:HAS_MODERATOR]->(mod:Person)
   WHERE id(m) == $commentId OR id(m) == $postId
   RETURN
     id(f) AS forumId,

@@ -1,5 +1,5 @@
 MATCH
-  (start:Person)<-[:HAS_CREATOR]-(:`Comment`)<-[:REPLY_OF]-(comment:`Comment`)-[:HAS_CREATOR]->(person:Person)
+  (start:Person)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATOR]-(message)<-[:REPLY_OF_COMMENT|REPLY_OF_POST]-(comment:`Comment`)-[:COMMENT_HAS_CREATOR]->(person:Person)
   WHERE id(start) == $personId
   RETURN
     id(person) AS personId,

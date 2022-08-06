@@ -1,7 +1,7 @@
 MATCH (person:Person)-[:KNOWS*1..2]-(friend:Person)
   WHERE id(person) == $personId AND not(id(person)==id(friend))
   WITH DISTINCT friend
-MATCH (friend)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:$countryName})
+MATCH (friend:Person)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:$countryName})
   WHERE workAt.workFrom < $workFromYear
   RETURN
     id(friend) AS personId,
