@@ -316,7 +316,7 @@ public class NebulaQueryStore extends QueryStore {
                 QueryType.InteractiveUpdate1AddPersonPlace,
                 ImmutableMap.of(
                         LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertIdForInsertion(operation.personId())),
-                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.cityId())))
+                        "cityId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.cityId())))
                         ));
         return list;
     }
@@ -347,7 +347,7 @@ public class NebulaQueryStore extends QueryStore {
                 QueryType.InteractiveUpdate4AddForumPerson,
                 ImmutableMap.of(
                         LdbcUpdate4AddForum.FORUM_ID, getConverter().convertString(NebulaID.FORUM_ID_PREFIX + getConverter().convertIdForInsertion(operation.forumId())),
-                        "personId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.moderatorPersonId())))
+                        "moderatorPersonId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.moderatorPersonId())))
         ));
         return list;
 
@@ -385,7 +385,7 @@ public class NebulaQueryStore extends QueryStore {
                 QueryType.InteractiveUpdate6AddPostPlace,
                 ImmutableMap.of(
                         LdbcUpdate6AddPost.POST_ID, getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertIdForInsertion(operation.postId())),
-                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
+                        "countryId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
         ));
 
         // add Post-[hasCreator]->Person
@@ -393,7 +393,7 @@ public class NebulaQueryStore extends QueryStore {
                 QueryType.InteractiveUpdate6AddPostPerson,
                 ImmutableMap.of(
                         LdbcUpdate6AddPost.POST_ID, getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertIdForInsertion(operation.postId())),
-                        "personId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.authorPersonId())))
+                        "authorPersonId", getConverter().convertString(NebulaID.PERSON_ID_PREFIX + getConverter().convertId(operation.authorPersonId())))
         ));
 
         // add Post-[containerOf]->Forum
@@ -432,27 +432,31 @@ public class NebulaQueryStore extends QueryStore {
         }
 
         // add Comment-[Comment_reply_Of]->Comment
-        list.add(prepare(
-                QueryType.InteractiveUpdate7AddCommentComment,
-                ImmutableMap.of(
-                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
-                        "replyToCommentId", getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.replyToCommentId())))
-        ));
+        if (operation.replyToCommentId() != -1) {
+            list.add(prepare(
+                    QueryType.InteractiveUpdate7AddCommentComment,
+                    ImmutableMap.of(
+                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                            "replyToCommentId", getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertId(operation.replyToCommentId())))
+            ));
+        }
 
         // add Comment-[Post_reply_Of]->Post
-        list.add(prepare(
-                QueryType.InteractiveUpdate7AddCommentPost,
-                ImmutableMap.of(
-                        LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
-                        "postId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.replyToPostId())))
-        ));
+        if (operation.replyToPostId() != -1) {
+            list.add(prepare(
+                    QueryType.InteractiveUpdate7AddCommentPost,
+                    ImmutableMap.of(
+                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
+                            "replyToPostId", getConverter().convertString(NebulaID.POST_ID_PREFIX + getConverter().convertId(operation.replyToPostId())))
+            ));
+        }
 
         // add Comment-[isLocatedIn]->Place(Country)
         list.add(prepare(
                 QueryType.InteractiveUpdate7AddCommentPlace,
                 ImmutableMap.of(
                         LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertString(NebulaID.COMMENT_ID_PREFIX + getConverter().convertIdForInsertion(operation.commentId())),
-                        "placeId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
+                        "countryId", getConverter().convertString(NebulaID.PLACE_ID_PREFIX + getConverter().convertId(operation.countryId())))
         ));
 
         // add Comment-[hasCreator]->Person
