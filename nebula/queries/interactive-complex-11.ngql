@@ -4,7 +4,7 @@ MATCH (person:Person)-[:KNOWS*1..2]-(friend:Person)
 MATCH (friend:Person)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:$countryName})
   WHERE workAt.workFrom < $workFromYear
   RETURN
-    id(friend) AS personId,
+    toInteger(substr(id(friend), 2)) AS personId,
     friend.Person.firstName AS personFirstName,
     friend.Person.lastName AS personLastName,
     company.Organisation.name AS organizationName,

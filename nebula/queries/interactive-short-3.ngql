@@ -1,7 +1,7 @@
 MATCH (n:Person)-[r:KNOWS]-(friend)
   WHERE id(n) == $personId
   RETURN
-    id(friend) AS personId,
+    toInteger(substr(id(friend), 2)) AS personId,
     friend.Person.firstName AS firstName,
     friend.Person.lastName AS lastName,
     r.creationDate AS friendshipCreationDate

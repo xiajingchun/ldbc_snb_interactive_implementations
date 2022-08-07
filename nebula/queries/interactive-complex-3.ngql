@@ -28,7 +28,7 @@ WITH friend,
 WITH friend, sum(messageX) AS xCount, sum(messageY) AS yCount
 WHERE xCount>0 AND yCount>0
 RETURN
-  id(friend) AS friendId,
+  tointeger(substr(id(friend), 2)) AS friendId,
   friend.Person.firstName AS friendFirstName,
   friend.Person.lastName AS friendLastName,
   xCount,

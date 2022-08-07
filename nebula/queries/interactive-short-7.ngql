@@ -5,7 +5,7 @@ MATCH (m)<-[:REPLY_OF_COMMENT|REPLY_OF_POST]-(c:`Comment`)-[:COMMENT_HAS_CREATOR
    id(c) AS commentId,
    c.`Comment`.content AS commentContent,
    c.`Comment`.creationDate AS commentCreationDate,
-   id(p) AS replyAuthorId,
+   toInteger(substr(id(p), 2)) AS replyAuthorId,
    p.Person.firstName AS replyAuthorFirstName,
    p.Person.lastName AS replyAuthorLastName,
    CASE r
