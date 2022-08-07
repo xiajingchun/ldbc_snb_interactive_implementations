@@ -4,15 +4,15 @@
  	KNOWS._dst AS personId,
  	$$.Person.firstName AS personFirstName,
  	$$.Person.lastName AS personLastName
- | GO FROM $-.personId OVER POST_HAS_CREATOR_NEW REVERSELY
- WHERE POST_HAS_CREATOR_NEW.creationDate < $maxDate
+ | GO FROM $-.personId OVER POST_HAS_CREATOR REVERSELY
+ WHERE POST_HAS_CREATOR.creationDate < $maxDate
  YIELD
  	$-.personId AS personId,
  	$-.personFirstName AS personFirstName,
  	$-.personLastName AS personLastName,
- 	POST_HAS_CREATOR_NEW._dst AS messageId,
- 	coalesce(POST_HAS_CREATOR_NEW.imageFile, POST_HAS_CREATOR_NEW.content) AS messageContent,
-    POST_HAS_CREATOR_NEW.creationDate AS messageCreationDate
+ 	POST_HAS_CREATOR._dst AS messageId,
+ 	coalesce(POST_HAS_CREATOR.imageFile, POST_HAS_CREATOR.content) AS messageContent,
+    POST_HAS_CREATOR.creationDate AS messageCreationDate
 | ORDER BY
 	$-.messageCreationDate DESC,
 	$-.messageId ASC
@@ -24,15 +24,15 @@ UNION ALL
  	KNOWS._dst AS personId,
  	$$.Person.firstName AS personFirstName,
  	$$.Person.lastName AS personLastName
- | GO FROM $-.personId OVER COMMENT_HAS_CREATOR_NEW REVERSELY
- WHERE COMMENT_HAS_CREATOR_NEW.creationDate < $maxDate
+ | GO FROM $-.personId OVER COMMENT_HAS_CREATOR REVERSELY
+ WHERE COMMENT_HAS_CREATOR.creationDate < $maxDate
  YIELD
  	$-.personId AS personId,
  	$-.personFirstName AS personFirstName,
  	$-.personLastName AS personLastName,
- 	COMMENT_HAS_CREATOR_NEW._dst AS messageId,
- 	COMMENT_HAS_CREATOR_NEW.content AS messageContent,
-    COMMENT_HAS_CREATOR_NEW.creationDate AS messageCreationDate
+ 	COMMENT_HAS_CREATOR._dst AS messageId,
+ 	COMMENT_HAS_CREATOR.content AS messageContent,
+    COMMENT_HAS_CREATOR.creationDate AS messageCreationDate
 | ORDER BY
 	$-.messageCreationDate DESC,
 	$-.messageId ASC
