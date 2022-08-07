@@ -6,8 +6,8 @@ MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATO
     friend.Person.lastName AS personLastName,
     id(message) AS messageId,
     CASE exists(message.`Comment`.content)
-      WHEN true THEN coalesce(message.`Comment`.imageFile,message.`Comment`.content)
-      ELSE coalesce(message.Post.imageFile,message.Post.content)
+      WHEN true THEN message.`Comment`.content
+      ELSE CASE size(message.Post.imageFile) WHEN 0 THEN message.Post.content ELSE message.Post.imageFile END
     END AS messageContent,
     CASE exists(message.`Comment`.content)
       WHEN true THEN message.`Comment`.creationDate

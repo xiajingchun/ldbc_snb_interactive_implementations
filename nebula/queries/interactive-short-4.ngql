@@ -6,6 +6,6 @@ MATCH (m)
       ELSE m.Post.creationDate
       END AS messageCreationDate,
     CASE exists(m.`Comment`.content)
-      WHEN true THEN coalesce(m.`Comment`.imageFile,m.`Comment`.content)
-      ELSE coalesce(m.Post.imageFile,m.Post.content)
+      WHEN true THEN m.`Comment`.content
+      ELSE CASE size(m.Post.imageFile) WHEN 0 THEN m.Post.content ELSE m.Post.imageFile END
     END AS messageContent
