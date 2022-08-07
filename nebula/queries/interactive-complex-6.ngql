@@ -1,1 +1,5 @@
-GO 1 to 2 steps from $personId over KNOWS bidirect where id($$)<>$personId yield id($$) as friend | GO from $-.friend over POST_HAS_CREATOR reversely yield id($$) as friendPost | GO from $-.friendPost over HAS_TAG where $$.`Tag`.name==$tagName yield id($^) as postWithSpecifiedTag | GO from $-.postWithSpecifiedTag over HAS_TAG where $$.`Tag`.name<>$tagName yield properties($$).name as otherTagName, id($^) as commonPost | group by $-.otherTagName yield $-.otherTagName as otherTagName, count($-.commonPost) as postCount | order by $-.postCount desc | limit 10
+GO 1 to 2 steps from $personId over KNOWS bidirect where KNOWS._dst <> $personId yield KNOWS._dst as friend | \
+GO from $-.friend over POST_HAS_CREATOR reversely yield POST_HAS_CREATOR._dst as friendPost | \
+GO from $-.friendPost over HAS_TAG where $$.`Tag`.name==$tagName yield HAS_TAG._src as postWithSpecifiedTag | \
+GO from $-.postWithSpecifiedTag over HAS_TAG where $$.`Tag`.name<>$tagName yield $$.`Tag`.name as otherTagName, HAS_TAG._src as commonPost | \
+group by $-.otherTagName yield $-.otherTagName as otherTagName, count($-.commonPost) as postCount | order by $-.postCount desc, $-.otherTagName ASC | limit 10
