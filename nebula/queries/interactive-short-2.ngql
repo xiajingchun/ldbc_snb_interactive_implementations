@@ -1,11 +1,11 @@
-MATCH (n:Person)<-[:COMMENT_HAS_CREATOR | POST_HAS_CREATOR]-(message)-[:REPLY_OF_POST*0..100]->(p:Post)
+MATCH (n:Person)<-[:COMMENT_HAS_CREATOR | POST_HAS_CREATOR]-(message)-[:REPLY_OF_POST | REPLY_OF_COMMENT*0..100]->(p:Post)
   WHERE id(n)==$personId
 MATCH (p)-[:POST_HAS_CREATOR]->(c)
   RETURN
   id(message) as messageId,
   CASE tags(message)[0]
-    WHEN "Comment" THEN coalesce(message.`Comment`.imageFile,message.`Comment`.content)
-    ELSE coalesce(message.Post.imageFile,message.Post.content)
+    WHEN "Comment" THEN message.`Comment`.content
+    ELSE  CASE size(message.Post.imageFile) WHEN 0 THEN message.Post.content ELSE message.Post.imageFile END
   END AS messageContent,
   CASE tags(message)[0]
     WHEN "Comment" THEN message.`Comment`.creationDate
