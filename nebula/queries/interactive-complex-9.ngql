@@ -10,8 +10,8 @@
  	$-.personId AS personId,
  	$-.personFirstName AS personFirstName,
  	$-.personLastName AS personLastName,
- 	POST_HAS_CREATOR._dst AS messageId,
- 	coalesce(POST_HAS_CREATOR.imageFile, POST_HAS_CREATOR.content) AS messageContent,
+ 	toInteger(substr(POST_HAS_CREATOR._dst, 2)) AS messageId,
+ 	CASE size(POST_HAS_CREATOR.imageFile) WHEN 0 THEN POST_HAS_CREATOR.content ELSE POST_HAS_CREATOR.imageFile END AS messageContent,
     POST_HAS_CREATOR.creationDate AS messageCreationDate
 | ORDER BY
 	$-.messageCreationDate DESC,
@@ -30,7 +30,7 @@ UNION ALL
  	$-.personId AS personId,
  	$-.personFirstName AS personFirstName,
  	$-.personLastName AS personLastName,
- 	COMMENT_HAS_CREATOR._dst AS messageId,
+ 	toInteger(substr(COMMENT_HAS_CREATOR._dst, 2)) AS messageId,
  	COMMENT_HAS_CREATOR.content AS messageContent,
     COMMENT_HAS_CREATOR.creationDate AS messageCreationDate
 | ORDER BY

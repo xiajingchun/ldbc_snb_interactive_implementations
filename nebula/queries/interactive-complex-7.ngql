@@ -15,7 +15,7 @@ WITH
     person
 OPTIONAL MATCH p = (liker)-[:KNOWS]-(person)
 RETURN
-    id(liker) AS personId,
+    toInteger(substr(id(liker), 2)) AS personId,
     liker.Person.firstName AS personFirstName,
     liker.Person.lastName AS personLastName,
     latestLike.likeTime AS likeCreationDate,
