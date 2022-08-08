@@ -1,4 +1,4 @@
 INSERT EDGE IF NOT EXISTS
     CONTAINER_OF()
 VALUES
-    $postId->$forumId:()
+    $forumId->$postId:()
