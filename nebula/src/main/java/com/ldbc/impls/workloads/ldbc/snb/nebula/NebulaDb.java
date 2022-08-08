@@ -377,7 +377,10 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             String personLastName = record.get(2).asString();
             List<String> tagNames = new ArrayList<>();
             if (!record.get(3).isNull()) {
-                // TODO: tagNames = record.get(3).asList((e) -> e.asString());
+                ArrayList<ValueWrapper> values = record.get(3).asList();
+                for (ValueWrapper val : values) {
+                    tagNames.add(val.asString());
+                }
             }
             int replyCount = (int) record.get(4).asLong();
             return new LdbcQuery12Result(
