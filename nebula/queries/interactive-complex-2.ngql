@@ -1,17 +1,10 @@
-MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATOR]-(message)
-  WHERE id(n) == $personId and (message.`Comment`.creationDate <= $maxDate or message.`Post`.creationDate <= $maxDate)
-  RETURN
-    id(friend) AS personId,
-    friend.Person.firstName AS personFirstName,
-    friend.Person.lastName AS personLastName,
-    id(message) AS messageId,
-    CASE exists(message.`Comment`.content)
-      WHEN true THEN message.`Comment`.content
-      ELSE CASE size(message.Post.imageFile) WHEN 0 THEN message.Post.content ELSE message.Post.imageFile END
-    END AS messageContent,
-    CASE exists(message.`Comment`.content)
-      WHEN true THEN message.`Comment`.creationDate
-      ELSE message.Post.creationDate
-    END AS messageCreationDate
-    ORDER BY messageCreationDate DESC, messageId ASC
-    LIMIT 20
+GO FROM $personId OVER KNOWS YIELD KNOWS._dst AS friendId
+| GO FROM $-.friendId OVER POST_HAS_CREATOR, COMMENT_HAS_CREATOR REVERSELY WHERE (COMMENT_HAS_CREATOR.creationDate is not EMPTY and COMMENT_HAS_CREATOR.creationDate <= $maxDate) or (POST_HAS_CREATOR.creationDate is not EMPTY and POST_HAS_CREATOR.creationDate <= $maxDate)
+YIELD
+    $-.friendId AS personId,
+    $^.Person.firstName AS personFirstName,
+    $^.Person.lastName AS personLastName,
+    toInteger(substr(id($$), 2)) AS messageId,
+    CASE WHEN COMMENT_HAS_CREATOR.content is not EMPTY THEN COMMENT_HAS_CREATOR.content ELSE CASE CASE size(POST_HAS_CREATOR.imageFile) WHEN 0 THEN POST_HAS_CREATOR.content ELSE POST_HAS_CREATOR.imageFile END END AS messageContent,
+    CASE WHEN COMMENT_HAS_CREATOR.creationDate is not EMPTY THEN COMMENT_HAS_CREATOR.creationDate ELSE POST_HAS_CREATOR.creationDate END AS messageCreationDate
+     | ORDER BY $-.messageCreationDate DESC, $-.messageId ASC | LIMIT 20
