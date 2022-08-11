@@ -1,11 +1,1 @@
-MATCH (m)
-  WHERE id(m) == $commentId OR id(m) == $postId
-  RETURN
-    CASE exists(m.`Comment`.creationDate)
-      WHEN true THEN m.`Comment`.creationDate
-      ELSE m.Post.creationDate
-      END AS messageCreationDate,
-    CASE exists(m.`Comment`.content)
-      WHEN true THEN m.`Comment`.content
-      ELSE CASE size(m.Post.imageFile) WHEN 0 THEN m.Post.content ELSE m.Post.imageFile END
-    END AS messageContent
+FETCH PROP ON `Comment`, Post  $commentId, $postId YIELD CASE WHEN `Comment`.creationDate is not EMPTY THEN `Comment`.creationDate ELSE Post.creationDate END AS messageCreationDate, CASE WHEN `Comment`.content is not EMPTY THEN `Comment`.content ELSE CASE size(Post.imageFile) WHEN 0 THEN Post.content ELSE Post.imageFile END END AS messageContent
