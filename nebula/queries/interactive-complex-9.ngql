@@ -1,44 +1,16 @@
- (GO 1 TO 2 STEPS FROM $personId OVER KNOWS BIDIRECT
- WHERE KNOWS._dst != $personId
- YIELD DISTINCT
- 	KNOWS._dst AS personId,
- 	$$.Person.firstName AS personFirstName,
- 	$$.Person.lastName AS personLastName
- | GO FROM $-.personId OVER POST_HAS_CREATOR REVERSELY
- WHERE POST_HAS_CREATOR.creationDate < $maxDate
- YIELD
- 	$-.personId AS personId,
- 	$-.personFirstName AS personFirstName,
- 	$-.personLastName AS personLastName,
- 	toInteger(substr(POST_HAS_CREATOR._dst, 2)) AS messageId,
- 	CASE size(POST_HAS_CREATOR.imageFile) WHEN 0 THEN POST_HAS_CREATOR.content ELSE POST_HAS_CREATOR.imageFile END AS messageContent,
-    POST_HAS_CREATOR.creationDate AS messageCreationDate
-| ORDER BY
-	$-.messageCreationDate DESC,
-	$-.messageId ASC
-| LIMIT 20
-UNION ALL
  GO 1 TO 2 STEPS FROM $personId OVER KNOWS BIDIRECT
  WHERE KNOWS._dst != $personId
  YIELD DISTINCT
  	KNOWS._dst AS personId,
  	$$.Person.firstName AS personFirstName,
  	$$.Person.lastName AS personLastName
- | GO FROM $-.personId OVER COMMENT_HAS_CREATOR REVERSELY
- WHERE COMMENT_HAS_CREATOR.creationDate < $maxDate
+ | GO FROM $-.personId OVER POST_HAS_CREATOR, COMMENT_HAS_CREATOR REVERSELY
+ WHERE (COMMENT_HAS_CREATOR.creationDate is not EMPTY and COMMENT_HAS_CREATOR.creationDate < $maxDate) OR (POST_HAS_CREATOR.creationDate is not EMPTY and POST_HAS_CREATOR.creationDate < $maxDate)
  YIELD
- 	$-.personId AS personId,
- 	$-.personFirstName AS personFirstName,
- 	$-.personLastName AS personLastName,
- 	toInteger(substr(COMMENT_HAS_CREATOR._dst, 2)) AS messageId,
- 	COMMENT_HAS_CREATOR.content AS messageContent,
-    COMMENT_HAS_CREATOR.creationDate AS messageCreationDate
-| ORDER BY
-	$-.messageCreationDate DESC,
-	$-.messageId ASC
-| LIMIT 20
-)
-| ORDER BY
-	$-.messageCreationDate DESC,
-	$-.messageId ASC
-| LIMIT 20
+  	$-.personId AS personId,
+  	$-.personFirstName AS personFirstName,
+  	$-.personLastName AS personLastName,
+  	toInteger(substr(id($$), 2)) AS messageId,
+  	CASE WHEN COMMENT_HAS_CREATOR.content is not EMPTY THEN COMMENT_HAS_CREATOR.content ELSE CASE size(POST_HAS_CREATOR.imageFile) WHEN 0 THEN POST_HAS_CREATOR.content ELSE POST_HAS_CREATOR.imageFile END END AS messageContent,
+  	CASE WHEN COMMENT_HAS_CREATOR.creationDate is not EMPTY THEN COMMENT_HAS_CREATOR.creationDate ELSE POST_HAS_CREATOR.creationDate END AS messageCreationDate
+ | ORDER BY $-.messageCreationDate DESC, $-.messageId ASC | LIMIT 20
