@@ -150,7 +150,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
             long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long messageId = Long.parseLong(record.get(3).asString().substring(NebulaID.ID_PREFIX_SIZE));
+            long messageId = record.get(3).asLong();
             String messageContent = record.get(4).asString();
             long messageCreationDate = NebulaConverter.convertDateTimesToEpoch(record.get(5).asDateTime().getLocalDateTimeStr());
 
