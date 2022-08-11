@@ -1,8 +1,1 @@
-MATCH (n:Person)-[r:KNOWS]-(friend)
-  WHERE id(n) == $personId
-  RETURN
-    toInteger(substr(id(friend), 2)) AS personId,
-    friend.Person.firstName AS firstName,
-    friend.Person.lastName AS lastName,
-    r.creationDate AS friendshipCreationDate
-    ORDER BY friendshipCreationDate DESC, personId ASC
+ GO FROM $personId OVER KNOWS BIDIRECT YIELD toInteger(substr(KNOWS._dst, 2)) AS personId, $$.Person.firstName AS firstName, $$.Person.lastName AS lastName, KNOWS.creationDate AS friendshipCreationDate | ORDER BY $-.friendshipCreationDate DESC, $-.personId ASC

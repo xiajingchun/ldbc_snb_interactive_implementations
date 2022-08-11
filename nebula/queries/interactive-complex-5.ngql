@@ -1,12 +1,1 @@
-MATCH (person:Person)-[:KNOWS*1..2]-(friend:Person)<-[membership:HAS_MEMBER]-(forum:Forum)
-  WHERE id(person) == $personId AND membership.joinDate > $minDate
-  AND not(person==friend)
-  WITH DISTINCT friend, forum
-  OPTIONAL MATCH (friend)<-[:POST_HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(forum)
-  WITH forum, count(post) AS postCount
-  RETURN
-    tointeger(substr(id(forum), 2)) AS forumId,
-    forum.Forum.title AS forumTitle,
-    postCount
-    ORDER BY postCount DESC, forumId ASC
-    LIMIT 20
+GO 1 TO 2 STEPS FROM $personId OVER KNOWS WHERE KNOWS._dst != $personId YIELD distinct KNOWS._dst AS friendId | GO FROM $-.friendId OVER HAS_MEMBER REVERSELY WHERE HAS_MEMBER.joinDate > $minDate YIELD distinct HAS_MEMBER._dst AS forumId, $-.friendId as friendId| GO FROM $-.forumId OVER CONTAINER_OF YIELD $-.friendId AS friendId, $^.Forum.title AS title, $-.forumId AS forumId, CONTAINER_OF._dst AS postId | GO FROM $-.postId OVER POST_HAS_CREATOR WHERE POST_HAS_CREATOR._dst == $-.friendId YIELD $-.forumId AS forumId, $-.title AS forumTitle, $-.postId AS postId | group by $-.forumId, $-.forumTitle YIELD toInteger(substr($-.forumId, 2)) AS forumId, $-.forumTitle AS forumTitle, count($-.postId) AS postCount | ORDER BY $-.postCount DESC, $-.forumId ASC | LIMIT 20

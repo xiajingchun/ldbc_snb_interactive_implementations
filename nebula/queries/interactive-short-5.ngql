@@ -1,6 +1,1 @@
-MATCH (m)-[:POST_HAS_CREATOR | COMMENT_HAS_CREATOR]->(p:Person)
-  WHERE id(m) == $commentId OR id(m) == $postId
-  RETURN
-    id(p) AS personId,
-    p.Person.firstName AS firstName,
-    p.Person.lastName AS lastName
+GO FROM $commentId, $postId OVER COMMENT_HAS_CREATOR, POST_HAS_CREATOR YIELD id($$) AS personId, $$.Person.firstName AS firstName, $$.Person.lastName AS lastName
