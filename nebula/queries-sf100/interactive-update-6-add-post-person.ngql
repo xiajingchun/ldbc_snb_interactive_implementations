@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    POST_HAS_CREATOR()
+VALUES
+    $postId->$authorPersonId:()
