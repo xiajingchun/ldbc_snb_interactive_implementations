@@ -1,4 +1,4 @@
-GO FROM $personId OVER KNOWS YIELD KNOWS._dst AS friendId
+GO FROM $personId OVER KNOWS BIDIRECT YIELD KNOWS._dst AS friendId
 | GO FROM $-.friendId OVER POST_HAS_CREATOR, COMMENT_HAS_CREATOR REVERSELY WHERE (COMMENT_HAS_CREATOR.creationDate is not EMPTY and COMMENT_HAS_CREATOR.creationDate <= $maxDate) or (POST_HAS_CREATOR.creationDate is not EMPTY and POST_HAS_CREATOR.creationDate <= $maxDate)
 YIELD
     $-.friendId AS personId,
