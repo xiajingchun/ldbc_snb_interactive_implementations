@@ -1,0 +1,19 @@
+MATCH (n:Person)<-[:COMMENT_HAS_CREATOR | POST_HAS_CREATOR]-(message)-[:REPLY_OF_POST | REPLY_OF_COMMENT*0..100]->(p:Post)
+  WHERE id(n)==$personId
+MATCH (p)-[:POST_HAS_CREATOR]->(c)
+  RETURN
+  id(message) as messageId,
+  CASE tags(message)[0]
+    WHEN "Comment" THEN message.`Comment`.content
+    ELSE  CASE size(message.Post.imageFile) WHEN 0 THEN message.Post.content ELSE message.Post.imageFile END
+  END AS messageContent,
+  CASE tags(message)[0]
+    WHEN "Comment" THEN message.`Comment`.creationDate
+    ELSE message.Post.creationDate
+  END AS messageCreationDate,
+  id(p) AS originalPostId,
+  id(c) AS originalPostAuthorId,
+  c.Person.firstName as originalPostAuthorFirstName,
+  c.Person.lastName as originalPostAuthorLastName
+  ORDER BY messageCreationDate DESC
+  LIMIT 10

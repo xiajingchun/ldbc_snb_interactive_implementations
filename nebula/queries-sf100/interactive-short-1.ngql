@@ -1,0 +1,1 @@
+GO FROM $personId OVER IS_LOCATED_IN YIELD $^.Person.firstName AS firstName, $^.Person.lastName AS lastName, $^.Person.birthday AS birthday, $^.Person.locationIP AS locationIP, $^.Person.browserUsed AS browserUsed, IS_LOCATED_IN._dst AS cityId, $^.Person.gender AS gender, $^.Person.creationDate AS creationDate
