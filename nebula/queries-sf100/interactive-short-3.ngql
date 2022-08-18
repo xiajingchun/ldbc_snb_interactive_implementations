@@ -1,0 +1,1 @@
+ GO FROM $personId OVER KNOWS BIDIRECT YIELD toInteger(substr(KNOWS._dst, 2)) AS personId, $$.Person.firstName AS firstName, $$.Person.lastName AS lastName, KNOWS.creationDate AS friendshipCreationDate | ORDER BY $-.friendshipCreationDate DESC, $-.personId ASC

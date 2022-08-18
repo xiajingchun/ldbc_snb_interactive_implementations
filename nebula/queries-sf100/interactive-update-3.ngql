@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    LIKES_COMMENT(creationDate)
+VALUES
+    $personId->$commentId:($creationDate)

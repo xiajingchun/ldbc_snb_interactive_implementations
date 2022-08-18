@@ -1,0 +1,45 @@
+MATCH p=(person:Person)-[:KNOWS*1..3]-(friend:Person {firstName: $firstName})
+WHERE id(person) == $personId
+AND person <> friend
+WITH friend, length(p) AS distance
+LIMIT 20
+MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:Place)
+OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:Organisation)-[:IS_LOCATED_IN]->(uniCity:Place)
+WITH
+  friend,
+  collect(
+    CASE uni.Organisation.name
+      WHEN null THEN null
+      ELSE [uni.Organisation.name, studyAt.classYear, uniCity.Place.name]
+    END
+  ) AS unis,
+  friendCity,
+  distance
+OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(companyCountry:Place)
+WITH
+  friend,
+  collect(
+    CASE company.Organisation.name
+      WHEN null THEN null
+      ELSE [company.Organisation.name, workAt.workFrom, companyCountry.Place.name]
+    END
+  ) AS companies,
+  unis,
+  friendCity,
+  distance
+RETURN
+  id(friend) AS friendId,
+  friend.Person.lastName AS friendLastName,
+  distance AS distanceFromPerson,
+  friend.Person.birthday AS friendBirthday,
+  friend.Person.creationDate AS friendCreationDate,
+  friend.Person.gender AS friendGender,
+  friend.Person.browserUsed AS friendBrowserUsed,
+  friend.Person.locationIP AS friendLocationIp,
+  friend.Person.email AS friendEmails,
+  friend.Person.speaks AS friendLanguages,
+  friendCity.Place.name AS friendCityName,
+  unis AS friendUniversities,
+  companies AS friendCompanies
+ORDER BY distanceFromPerson ASC, friendLastName ASC
+LIMIT 20
