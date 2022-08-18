@@ -80,43 +80,15 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>cypher</module>
-                <module>duckdb</module>
-                <module>postgres</module>
-                <module>tigergraph</module>
-                <module>umbra</module>
+                <module>nebula</module>
           </modules>
         </profile>
         <profile>
-            <id>cypher</id>
+            <id>nebula</id>
             <modules>
-                <module>cypher</module>
+                <module>nebula</module>
             </modules>
         </profile>
-        <profile>
-            <id>duckdb</id>
-            <modules>
-                <module>duckdb</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>postgres</id>
-            <modules>
-                <module>postgres</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tigergraph</id>
-            <modules>
-                <module>tigergraph</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>umbra</id>
-            <modules>
-                <module>umbra</module>
-            </modules>
-        </profile>
-    </profiles>
+     </profiles>
 
 </project>

@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    REPLY_OF_COMMENT()
+VALUES
+    $commentId->$replyToCommentId:()

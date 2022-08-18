@@ -1,0 +1,4 @@
+INSERT EDGE IF NOT EXISTS
+    IS_LOCATED_IN()
+VALUES
+    $postId->$countryId:()

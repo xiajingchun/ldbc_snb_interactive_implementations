@@ -1,0 +1,1 @@
+GO FROM $commentId, $postId OVER COMMENT_HAS_CREATOR, POST_HAS_CREATOR YIELD id($$) AS personId, $$.Person.firstName AS firstName, $$.Person.lastName AS lastName

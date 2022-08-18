@@ -1,0 +1,1 @@
+FETCH PROP ON `Comment`, Post  $commentId, $postId YIELD CASE WHEN `Comment`.creationDate is not EMPTY THEN `Comment`.creationDate ELSE Post.creationDate END AS messageCreationDate, CASE WHEN `Comment`.content is not EMPTY THEN `Comment`.content ELSE CASE size(Post.imageFile) WHEN 0 THEN Post.content ELSE Post.imageFile END END AS messageContent
