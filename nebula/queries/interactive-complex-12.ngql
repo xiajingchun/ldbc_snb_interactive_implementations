@@ -1,7 +1,7 @@
 MATCH (n:Person)-[:KNOWS]-(friend:Person)<-[:COMMENT_HAS_CREATOR]-(`comment`:`Comment`)-[:REPLY_OF_POST]->(:Post)-[:HAS_TAG]->(`tag`:`Tag`)-[:HAS_TYPE]->(tagClass:Tagclass)-[:IS_SUBCLASS_OF*0..100]->(baseTagClass:Tagclass)
   WHERE id(n) == $personId AND (tagClass.Tagclass.name == $tagClassName OR baseTagClass.Tagclass.name == $tagClassName)
   RETURN
-    id(friend) AS personId,
+    toInteger(substr(id(friend),2)) AS personId,
     friend.Person.firstName AS personFirstName,
     friend.Person.lastName AS personLastName,
     collect(DISTINCT `tag`.`Tag`.name) AS tagNames,
