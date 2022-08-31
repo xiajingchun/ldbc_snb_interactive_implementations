@@ -103,15 +103,23 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
             List<LdbcQuery1Result.Organization> universities = new ArrayList<>();
             if (!record.get(11).isNull()) {
-                // TODO:
+                List<ValueWrapper> value = record.get(11).asList();
+                for (ValueWrapper list : value) {
+                    List<ValueWrapper> res = list.asList();
+                    universities.add(new LdbcQuery1Result.Organization(res.get(0).asString(), ((Long)res.get(1).asLong()).intValue(), res.get(2).asString()));
+                }
             }
 
             List<LdbcQuery1Result.Organization>companies = new ArrayList<>();
             if (!record.get(12).isNull()) {
-                // TODO:
+                List<ValueWrapper> value = record.get(12).asList();
+                for (ValueWrapper list : value) {
+                    List<ValueWrapper> res = list.asList();
+                    companies.add(new LdbcQuery1Result.Organization(res.get(0).asString(), ((Long)res.get(1).asLong()).intValue(), res.get(2).asString()));
+                }
             }
 
-            long friendId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
+            long friendId = record.get(0).asLong();
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = (int) record.get(2).asLong();
             long friendBirthday = NebulaConverter.convertDateToEpoch(record.get(3).asString());
@@ -372,7 +380,7 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
         @Override
         public LdbcQuery12Result convertSingleResult(ResultSet.Record record) throws UnsupportedEncodingException  {
-            long personId = Long.parseLong(record.get(0).asString().substring(NebulaID.ID_PREFIX_SIZE));
+            long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             List<String> tagNames = new ArrayList<>();
