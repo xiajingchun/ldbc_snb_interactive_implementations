@@ -7,8 +7,8 @@ WITH DISTINCT friend
 MATCH (friend)<-[:POST_HAS_CREATOR|COMMENT_HAS_CREATOR]-(message)-[:IS_LOCATED_IN]->(country)
 WHERE
     CASE
-    WHEN  message.`Comment`.creationDate < $endDate AND message.`Comment`.creationDate >= $startDate AND (country.Place.name == $countryXName OR country.Place.name == $countryYName) THEN true
-    WHEN message.Post.creationDate < $endDate AND message.Post.creationDate >= $startDate AND (country.Place.name == $countryXName OR country.Place.name == $countryYName) THEN true
+    WHEN  message.`Comment`.creationDate < $durationDays AND message.`Comment`.creationDate >= $startDate AND (country.Place.name == $countryXName OR country.Place.name == $countryYName) THEN true
+    WHEN message.Post.creationDate < $durationDays AND message.Post.creationDate >= $startDate AND (country.Place.name == $countryXName OR country.Place.name == $countryYName) THEN true
     ELSE false
     END
 WITH friend,
