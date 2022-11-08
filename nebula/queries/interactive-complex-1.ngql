@@ -1,6 +1,7 @@
 MATCH p=(person:Person)-[:KNOWS*1..3]-(friend:Person {firstName: $firstName})
 WHERE id(person) == $personId AND id(friend) != $personId
-WITH friend, length(p) AS distance
+WITH friend,toInteger(substr(id(friend), 2)) as friendId, min(length(p)) AS distance
+ORDER BY distance ASC, friend.Person.lastName ASC, friendId ASC
 LIMIT 20
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:Place)
 OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:Organisation)-[:IS_LOCATED_IN]->(uniCity:Place)
