@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -89,16 +90,11 @@ public class NebulaDb  extends BaseDb<NebulaQueryStore> {
 
             List<String> emails = new ArrayList<>();
             if (!record.get(8).isNull()) {
-                for (ValueWrapper email : record.get(8).asList()) {
-                    emails.add(email.asString());
-                }
+                Collections.addAll(emails, record.get(8).asString().split(","));
             }
-
             List<String> languages = new ArrayList<>();
             if (!record.get(9).isNull()) {
-                for (ValueWrapper lang : record.get(9).asList()) {
-                    languages.add(lang.asString());
-                }
+                Collections.addAll(languages, record.get(9).asString().split(","));
             }
 
             List<LdbcQuery1Result.Organization> universities = new ArrayList<>();

@@ -4,7 +4,7 @@ WITH person, city, friend, datetime({epochMillis: friend.Person.birthday}) as bi
 WHERE  (birthday.month==$month AND birthday.day>=21) OR
         (birthday.month==($month%12)+1 AND birthday.day<22)
 WITH DISTINCT friend, city, person
-OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(post:Post)
+OPTIONAL MATCH (friend)<-[:POST_HAS_CREATOR]-(post:Post)
 WITH friend, city, collect(post) AS posts, person
 WITH friend,
      city,
