@@ -20,8 +20,12 @@ RETURN
     liker.Person.lastName AS personLastName,
     latestLike.likeTime AS likeCreationDate,
     id(latestLike.msg) AS messageId,
-    CASE WHEN tags(latestLike.msg) == ["Post"] THEN latestLike.msg.imageFile
-      ELSE latestLike.msg.content END AS messageContent,
+    CASE WHEN tags(latestLike.msg) == ["Post"] THEN
+          CASE WHEN size(latestLike.msg.imageFile) == 0 THEN latestLike.msg.content
+          ELSE latestLike.msg.imageFile
+          END
+    ELSE latestLike.msg.content
+    END AS messageContent,
     latestLike.msg.creationDate AS messageCreationDate,
     p IS NULL AS isNew
 ORDER BY
